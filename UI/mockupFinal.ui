@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VentanaPrincipal</class>
+ <widget class="QMainWindow" name="VentanaPrincipal">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Boutique sueño amarillo</string>
+  </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonStyle::ToolButtonIconOnly</enum>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="frameFondo">
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame_izquierda">
+         <property name="frameShape">
+          <enum>QFrame::Shape::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="frame_2">
+            <property name="frameShape">
+             <enum>QFrame::Shape::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QPushButton" name="btn_venta_productos">
+               <property name="text">
+                <string>Venta Productos</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_stock">
+               <property name="text">
+                <string>Modificaciones Stock</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_cambios">
+               <property name="text">
+                <string>Cambiar o Cancelar</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_reportes">
+               <property name="text">
+                <string>Reportes</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QStackedWidget" name="pila_menu">
+            <property name="currentIndex">
+             <number>3</number>
+            </property>
+            <widget class="QWidget" name="venta_productos">
+             <widget class="QListView" name="lista_productos">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>30</y>
+                <width>631</width>
+                <height>511</height>
+               </rect>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QListView {
+        background-color: #34ebe5; /* Color de fondo gris claro */
+        border: 1px solid #ccc; /* Borde gris */
+        padding: 5px;
+    }
+    
+    QListView::item {
+        background-color: white; /* Fondo de cada item */
+        border: 1px solid transparent; /* Borde invisible */
+        padding: 10px;
+    }
+
+    QListView::item:selected {
+        background-color: #0078d7; /* Azul para selección */
+        color: white; /* Texto blanco */
+    }
+
+    QListView::item:hover {
+        background-color: #e0e0e0; /* Fondo gris claro al pasar el mouse */
+    }</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="btn_agregar_gasto">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>570</y>
+                <width>111</width>
+                <height>41</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Agregar un Gasto</string>
+              </property>
+             </widget>
+            </widget>
+            <widget class="QWidget" name="stock">
+             <widget class="QFrame" name="frame_stock">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>651</width>
+                <height>611</height>
+               </rect>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="QPushButton" name="btn_modificar_cantidades">
+                 <property name="text">
+                  <string>Modificar cantidades</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_agregar_producto">
+                 <property name="text">
+                  <string>Agregar nuevo producto</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_agregar_combo">
+                 <property name="text">
+                  <string>Agregar Combo</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_modificar_precios">
+                 <property name="text">
+                  <string>Modificar precios</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+            <widget class="QWidget" name="cambios">
+             <widget class="QFrame" name="frame_cambios">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>651</width>
+                <height>641</height>
+               </rect>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <widget class="QListView" name="lista_ventas_cambios">
+               <property name="geometry">
+                <rect>
+                 <x>20</x>
+                 <y>10</y>
+                 <width>621</width>
+                 <height>571</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="btn_cancelar_venta">
+               <property name="geometry">
+                <rect>
+                 <x>370</x>
+                 <y>590</y>
+                 <width>131</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Cancelar la venta</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="btn_cambiar_producto">
+               <property name="geometry">
+                <rect>
+                 <x>510</x>
+                 <y>590</y>
+                 <width>131</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Cambiar un producto</string>
+               </property>
+              </widget>
+             </widget>
+            </widget>
+            <widget class="QWidget" name="reportes">
+             <widget class="QFrame" name="frame_reportes">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>661</width>
+                <height>641</height>
+               </rect>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <widget class="QFrame" name="frame_fecha">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>0</y>
+                 <width>661</width>
+                 <height>421</height>
+                </rect>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::Shape::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Shadow::Raised</enum>
+               </property>
+               <widget class="QDateEdit" name="fecha_ventas_dia">
+                <property name="geometry">
+                 <rect>
+                  <x>30</x>
+                  <y>20</y>
+                  <width>110</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+               </widget>
+               <widget class="QListWidget" name="lista_ventas_dia">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>70</y>
+                  <width>621</width>
+                  <height>331</height>
+                 </rect>
+                </property>
+               </widget>
+               <widget class="QLabel" name="total_vendido">
+                <property name="geometry">
+                 <rect>
+                  <x>180</x>
+                  <y>10</y>
+                  <width>81</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>$120.000</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="lbl_total_vendido">
+                <property name="geometry">
+                 <rect>
+                  <x>170</x>
+                  <y>30</y>
+                  <width>81</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Total Vendido</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="lbl_total_efectivo">
+                <property name="geometry">
+                 <rect>
+                  <x>280</x>
+                  <y>30</y>
+                  <width>81</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Total Efectivo</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="total_efectivo">
+                <property name="geometry">
+                 <rect>
+                  <x>290</x>
+                  <y>10</y>
+                  <width>81</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>$120.000</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="lbl_total_tarjetas">
+                <property name="geometry">
+                 <rect>
+                  <x>370</x>
+                  <y>30</y>
+                  <width>81</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Total PosNet</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="total_tarjetas">
+                <property name="geometry">
+                 <rect>
+                  <x>380</x>
+                  <y>10</y>
+                  <width>81</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>$120.000</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="lbl_total_transferencia">
+                <property name="geometry">
+                 <rect>
+                  <x>450</x>
+                  <y>30</y>
+                  <width>101</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Total Transferencia</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="total_transferencia">
+                <property name="geometry">
+                 <rect>
+                  <x>480</x>
+                  <y>10</y>
+                  <width>81</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>$120.000</string>
+                </property>
+               </widget>
+              </widget>
+              <widget class="QFrame" name="frame_alertas_stock">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>430</y>
+                 <width>321</width>
+                 <height>191</height>
+                </rect>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::Shape::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Shadow::Raised</enum>
+               </property>
+               <widget class="QLabel" name="label_faltante_stock">
+                <property name="geometry">
+                 <rect>
+                  <x>90</x>
+                  <y>10</y>
+                  <width>101</width>
+                  <height>21</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Faltantes de Stock</string>
+                </property>
+               </widget>
+              </widget>
+              <widget class="QFrame" name="frame_descargar_pdfs">
+               <property name="geometry">
+                <rect>
+                 <x>340</x>
+                 <y>430</y>
+                 <width>311</width>
+                 <height>201</height>
+                </rect>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::Shape::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Shadow::Raised</enum>
+               </property>
+               <widget class="QLabel" name="label_descarga_reportes">
+                <property name="geometry">
+                 <rect>
+                  <x>90</x>
+                  <y>10</y>
+                  <width>121</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Descarga de Reportes</string>
+                </property>
+               </widget>
+               <widget class="QDateEdit" name="dateEdit_desde">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>40</y>
+                  <width>110</width>
+                  <height>22</height>
+                 </rect>
+                </property>
+               </widget>
+               <widget class="QLabel" name="label_y">
+                <property name="geometry">
+                 <rect>
+                  <x>140</x>
+                  <y>40</y>
+                  <width>21</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Y</string>
+                </property>
+               </widget>
+               <widget class="QDateEdit" name="dateEdit_hasta">
+                <property name="geometry">
+                 <rect>
+                  <x>170</x>
+                  <y>40</y>
+                  <width>110</width>
+                  <height>22</height>
+                 </rect>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="btn_ingresos_egresos">
+                <property name="geometry">
+                 <rect>
+                  <x>20</x>
+                  <y>80</y>
+                  <width>281</width>
+                  <height>24</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Ingresos y Egresos</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="btn_ventas_producto">
+                <property name="geometry">
+                 <rect>
+                  <x>20</x>
+                  <y>110</y>
+                  <width>281</width>
+                  <height>24</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Ventas por producto</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="btn_ventas_talle">
+                <property name="geometry">
+                 <rect>
+                  <x>20</x>
+                  <y>140</y>
+                  <width>281</width>
+                  <height>24</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Ventas por talle</string>
+                </property>
+               </widget>
+              </widget>
+             </widget>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="carrito">
+         <property name="frameShape">
+          <enum>QFrame::Shape::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <widget class="QLabel" name="label_titulo_venta">
+          <property name="geometry">
+           <rect>
+            <x>70</x>
+            <y>0</y>
+            <width>201</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Resumen de Venta</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_total">
+          <property name="geometry">
+           <rect>
+            <x>60</x>
+            <y>550</y>
+            <width>91</width>
+            <height>41</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Total</string>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="combo_medio_pago">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>600</y>
+            <width>191</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="currentText">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Efectivo</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_monto_total">
+          <property name="geometry">
+           <rect>
+            <x>170</x>
+            <y>560</y>
+            <width>121</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>$120.000,00</string>
+          </property>
+         </widget>
+         <widget class="QListWidget" name="lista_detalle_venta">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>311</width>
+            <height>491</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_limpiar">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>640</y>
+            <width>121</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Limpiar</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_vender">
+          <property name="geometry">
+           <rect>
+            <x>180</x>
+            <y>640</y>
+            <width>121</width>
+            <height>51</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Vender</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
