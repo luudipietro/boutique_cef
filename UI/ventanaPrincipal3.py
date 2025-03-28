@@ -265,6 +265,24 @@ class Ui_VentanaPrincipal(object):
         self.lista_detalle_venta = QListWidget(self.carrito)
         self.lista_detalle_venta.setObjectName(u"lista_detalle_venta")
         self.lista_detalle_venta.setGeometry(QRect(10, 50, 311, 491))
+        self.lista_detalle_venta.setStyleSheet(u"QListWidget {\n"
+                                           "        background-color: #b8b6b2; /* Color de fondo gris claro */\n"
+                                           "        border: 1px solid #ccc; /* Borde gris */\n"
+                                           "        padding: 0px;\n"
+                                           "    }\n"
+                                           "    \n"
+                                           "    QListWidget::item {\n"
+                                           "        background-color: white; /* Fondo de cada item */\n"
+                                           "        border: 1px solid transparent; /* Borde invisible */\n"
+                                           "        padding: 0px ;\n"
+                                           "        margin-bottom: 1px;\n"
+                                           "    }\n"
+                                           "\n"
+
+                                           "\n"
+                                           "    QListWidget::item:hover {\n"
+                                           "        background-color: #e0e0e0; /* Fondo gris claro al pasar el mouse */\n"
+                                           "    }")
         self.btn_limpiar = QPushButton(self.carrito)
         self.btn_limpiar.setObjectName(u"btn_limpiar")
         self.btn_limpiar.setGeometry(QRect(30, 640, 121, 51))
@@ -319,8 +337,8 @@ class Ui_VentanaPrincipal(object):
         self.label_titulo_venta.setText(QCoreApplication.translate("VentanaPrincipal", u"Resumen de Venta", None))
         self.label_total.setText(QCoreApplication.translate("VentanaPrincipal", u"Total", None))
         self.combo_medio_pago.setCurrentText("")
-        self.combo_medio_pago.setPlaceholderText(QCoreApplication.translate("VentanaPrincipal", u"Efectivo", None))
-        self.label_monto_total.setText(QCoreApplication.translate("VentanaPrincipal", u"$120.000,00", None))
+        self.combo_medio_pago.setPlaceholderText(QCoreApplication.translate("VentanaPrincipal", u"", None))
+        self.label_monto_total.setText(QCoreApplication.translate("VentanaPrincipal", u"", None))
         self.btn_limpiar.setText(QCoreApplication.translate("VentanaPrincipal", u"Limpiar", None))
         self.btn_vender.setText(QCoreApplication.translate("VentanaPrincipal", u"Vender", None))
     # retranslateUi
