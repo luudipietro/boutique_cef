@@ -18,6 +18,14 @@ class Inicio(QMainWindow):
     def load_products(self):
         productos = [
             ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
             ('Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L'])
         ]
         for nombre, precio, imagen, talles in productos:
