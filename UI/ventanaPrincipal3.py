@@ -16,7 +16,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QFrame,
-    QHBoxLayout, QLabel, QListView, QListWidget,
+    QHBoxLayout, QLabel, QListWidget,
     QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
     QStackedWidget, QVBoxLayout, QWidget)
 
@@ -26,6 +26,7 @@ class Ui_VentanaPrincipal(object):
             VentanaPrincipal.setObjectName(u"VentanaPrincipal")
         VentanaPrincipal.setEnabled(True)
         VentanaPrincipal.resize(1000, 700)
+        VentanaPrincipal.setStyleSheet("font-size: 16px;")
         VentanaPrincipal.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         self.centralwidget = QWidget(VentanaPrincipal)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -86,27 +87,26 @@ class Ui_VentanaPrincipal(object):
 
         self.venta_productos = QWidget()
         self.venta_productos.setObjectName(u"venta_productos")
-        self.lista_productos = QListView(self.venta_productos)
+        self.lista_productos = QListWidget(self.venta_productos)
         self.lista_productos.setObjectName(u"lista_productos")
+        #self.lista_productos.setContentsMargins(0,0,0,0)
         self.lista_productos.setGeometry(QRect(20, 30, 631, 511))
-        self.lista_productos.setStyleSheet(u"QListView {\n"
-"        background-color: #34ebe5; /* Color de fondo gris claro */\n"
+        self.lista_productos.setStyleSheet(u"QListWidget {\n"
+"        background-color: #b8b6b2; /* Color de fondo gris claro */\n"                                          
 "        border: 1px solid #ccc; /* Borde gris */\n"
-"        padding: 5px;\n"
+"        padding: 0px;\n"
 "    }\n"
 "    \n"
-"    QListView::item {\n"
+"    QListWidget::item {\n"
 "        background-color: white; /* Fondo de cada item */\n"
 "        border: 1px solid transparent; /* Borde invisible */\n"
-"        padding: 10px;\n"
+"        padding: 0px ;\n"
+"        margin-bottom: 1px;\n"                                           
 "    }\n"
 "\n"
-"    QListView::item:selected {\n"
-"        background-color: #0078d7; /* Azul para selecci\u00f3n */\n"
-"        color: white; /* Texto blanco */\n"
-"    }\n"
+
 "\n"
-"    QListView::item:hover {\n"
+"    QListWidget::item:hover {\n"
 "        background-color: #e0e0e0; /* Fondo gris claro al pasar el mouse */\n"
 "    }")
         self.btn_agregar_gasto = QPushButton(self.venta_productos)
@@ -150,7 +150,7 @@ class Ui_VentanaPrincipal(object):
         self.frame_cambios.setGeometry(QRect(0, 0, 651, 641))
         self.frame_cambios.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_cambios.setFrameShadow(QFrame.Shadow.Raised)
-        self.lista_ventas_cambios = QListView(self.frame_cambios)
+        self.lista_ventas_cambios = QListWidget(self.frame_cambios)
         self.lista_ventas_cambios.setObjectName(u"lista_ventas_cambios")
         self.lista_ventas_cambios.setGeometry(QRect(20, 10, 621, 571))
         self.btn_cancelar_venta = QPushButton(self.frame_cambios)
