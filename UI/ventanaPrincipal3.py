@@ -73,9 +73,15 @@ class Ui_VentanaPrincipal(object):
 
         self.horizontalLayout_2.addWidget(self.btn_cambios)
 
+        self.btn_cancelar = QPushButton(self.frame_2)
+        self.btn_cancelar.setObjectName(u"btn_cancelar")
+        self.btn_cancelar.pressed.connect(lambda: self.pila_menu.setCurrentIndex(3))
+
+        self.horizontalLayout_2.addWidget(self.btn_cancelar)
+
         self.btn_reportes = QPushButton(self.frame_2)
         self.btn_reportes.setObjectName(u"btn_reportes")
-        self.btn_reportes.pressed.connect(lambda: self.pila_menu.setCurrentIndex(3))
+        self.btn_reportes.pressed.connect(lambda: self.pila_menu.setCurrentIndex(4))
 
         self.horizontalLayout_2.addWidget(self.btn_reportes)
 
@@ -113,6 +119,7 @@ class Ui_VentanaPrincipal(object):
         self.btn_agregar_gasto.setObjectName(u"btn_agregar_gasto")
         self.btn_agregar_gasto.setGeometry(QRect(20, 570, 111, 41))
         self.pila_menu.addWidget(self.venta_productos)
+
         self.stock = QWidget()
         self.stock.setObjectName(u"stock")
         self.frame_stock = QFrame(self.stock)
@@ -143,6 +150,8 @@ class Ui_VentanaPrincipal(object):
         self.verticalLayout_2.addWidget(self.btn_modificar_precios)
 
         self.pila_menu.addWidget(self.stock)
+
+
         self.cambios = QWidget()
         self.cambios.setObjectName(u"cambios")
         self.frame_cambios = QFrame(self.cambios)
@@ -153,13 +162,28 @@ class Ui_VentanaPrincipal(object):
         self.lista_ventas_cambios = QListWidget(self.frame_cambios)
         self.lista_ventas_cambios.setObjectName(u"lista_ventas_cambios")
         self.lista_ventas_cambios.setGeometry(QRect(20, 10, 621, 571))
-        self.btn_cancelar_venta = QPushButton(self.frame_cambios)
-        self.btn_cancelar_venta.setObjectName(u"btn_cancelar_venta")
-        self.btn_cancelar_venta.setGeometry(QRect(370, 590, 131, 41))
         self.btn_cambiar_producto = QPushButton(self.frame_cambios)
         self.btn_cambiar_producto.setObjectName(u"btn_cambiar_producto")
         self.btn_cambiar_producto.setGeometry(QRect(510, 590, 131, 41))
         self.pila_menu.addWidget(self.cambios)
+
+        self.cancelar_venta = QWidget()
+        self.cancelar_venta.setObjectName(u"cancelar_venta")
+        self.frame_cancelar = QFrame(self.cancelar_venta)
+        self.frame_cancelar.setObjectName(u"frame_cambios")
+        self.frame_cancelar.setGeometry(QRect(0, 0, 651, 641))
+        self.frame_cancelar.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_cancelar.setFrameShadow(QFrame.Shadow.Raised)
+        self.lista_ventas_cancelar = QListWidget(self.frame_cancelar)
+        self.lista_ventas_cancelar.setObjectName(u"lista_ventas_cancelar")
+        self.lista_ventas_cancelar.setGeometry(QRect(20, 10, 621, 571))
+        self.btn_cancelar_venta = QPushButton(self.frame_cancelar)
+        self.btn_cancelar_venta.setObjectName(u"btn_cancelar_venta")
+        self.btn_cancelar_venta.setGeometry(QRect(510, 590, 131, 41))
+
+        self.pila_menu.addWidget(self.cancelar_venta)
+
+
         self.reportes = QWidget()
         self.reportes.setObjectName(u"reportes")
         self.frame_reportes = QFrame(self.reportes)
@@ -311,7 +335,8 @@ class Ui_VentanaPrincipal(object):
         VentanaPrincipal.setWindowTitle(QCoreApplication.translate("VentanaPrincipal", u"Boutique sue\u00f1o amarillo", None))
         self.btn_venta_productos.setText(QCoreApplication.translate("VentanaPrincipal", u"Venta Productos", None))
         self.btn_stock.setText(QCoreApplication.translate("VentanaPrincipal", u"Modificaciones Stock", None))
-        self.btn_cambios.setText(QCoreApplication.translate("VentanaPrincipal", u"Cambiar o Cancelar", None))
+        self.btn_cambios.setText(QCoreApplication.translate("VentanaPrincipal", u"Cambios", None))
+        self.btn_cancelar.setText(QCoreApplication.translate("VentanaPrincipal", u"Cancelar", None))
         self.btn_reportes.setText(QCoreApplication.translate("VentanaPrincipal", u"Reportes", None))
         self.btn_agregar_gasto.setText(QCoreApplication.translate("VentanaPrincipal", u"Agregar un Gasto", None))
         self.btn_modificar_cantidades.setText(QCoreApplication.translate("VentanaPrincipal", u"Modificar cantidades", None))
@@ -319,7 +344,7 @@ class Ui_VentanaPrincipal(object):
         self.btn_agregar_combo.setText(QCoreApplication.translate("VentanaPrincipal", u"Agregar Combo", None))
         self.btn_modificar_precios.setText(QCoreApplication.translate("VentanaPrincipal", u"Modificar precios", None))
         self.btn_cancelar_venta.setText(QCoreApplication.translate("VentanaPrincipal", u"Cancelar la venta", None))
-        self.btn_cambiar_producto.setText(QCoreApplication.translate("VentanaPrincipal", u"Cambiar un producto", None))
+        self.btn_cambiar_producto.setText(QCoreApplication.translate("VentanaPrincipal", u"Cambiar", None))
         self.total_vendido.setText(QCoreApplication.translate("VentanaPrincipal", u"$120.000", None))
         self.lbl_total_vendido.setText(QCoreApplication.translate("VentanaPrincipal", u"Total Vendido", None))
         self.lbl_total_efectivo.setText(QCoreApplication.translate("VentanaPrincipal", u"Total Efectivo", None))

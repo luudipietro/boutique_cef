@@ -3,6 +3,8 @@ from PySide6.QtGui import QPixmap, QIcon, Qt
 from PySide6.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QWidget, QHBoxLayout, QLabel, QSpinBox, \
     QVBoxLayout, QSizePolicy, QComboBox, QPushButton, QToolButton
 
+from UI.cancelar_ventas import load_ventas_cancelar, widgets_ventas_cancelar
+from UI.nueva_ventana import NuevaVentana
 from UI.ventanaPrincipal3 import Ui_VentanaPrincipal
 
 
@@ -13,32 +15,63 @@ class Inicio(QMainWindow):
         super().__init__()
         self.ui = Ui_VentanaPrincipal()
         self.ui.setupUi(self)
-        self.load_products()
+
         self.definir_metodos_pago()
         self.ui.btn_limpiar.clicked.connect(self.limpiar_carrito)
+        self.ui.pila_menu.currentChanged.connect(self.cambio_menu_principal)
+        self.productos = [
+            (1, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (2, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (3, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (4, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (5, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (6, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (7, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (8, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (9, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
+            (10, 'Camiseta de Juego', '500', 'camiseta_cef.jpg', ['S', 'M', 'L'])
+        ]
+        self.load_products()
 
 
+    def cambio_menu_principal(self, indice):
+        match indice:
+            case 0:
+                self.load_products()
+                print('Carga productos')
+            case 1:
+                self.productos.pop()
+                self.productos.append((107,'Camiseta de Juego', '25500', 'camiseta_cef.jpg', ['S', 'M', 'L']))
+                print('Modificacion Stock')
+            case 2:
+                print('Cambiar')
+            case 3:
+                self.load_cancelar_ventas()
+                print('Cancelar')
+            case 4:
+                print('Reportes')
 
     def definir_metodos_pago(self):
         metodos_pago = ['Efectivo', 'Transferencia', 'Tarjeta']
         self.ui.combo_medio_pago.addItems(metodos_pago)
 
+    def load_cancelar_ventas(self):
+        self.ui.lista_ventas_cancelar.clear()
+        for widget in widgets_ventas_cancelar(self.mostrar_detalle):
+            item =QListWidgetItem()
+            item.setSizeHint(QSize(350,80))
 
+            self.ui.lista_ventas_cancelar.addItem(item)
+            self.ui.lista_ventas_cancelar.setItemWidget(item, widget)
+
+    def mostrar_detalle(self, id):
+        self.ventana_detalle = NuevaVentana(f'Detalle Venta {id}')
+        self.ventana_detalle.show()
 
 
     def load_products(self):
-        self.productos = [
-            (1,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (2,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (3,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (4,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (5,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (6,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (7,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (8,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (9,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (10,'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L'])
-        ]
+        self.ui.lista_productos.clear()
+        #tomar produtos bd
         for id, nombre, precio, imagen, talles in self.productos:
             self.agregar_producto(id, nombre, precio, imagen, talles)
 
@@ -207,14 +240,15 @@ class Inicio(QMainWindow):
         label_tarjeta.setText(f'Tarjeta: ${(precio_base * valor) * 1.15:,.2f}')
 
     def limpiar_carrito(self):
-        for row in range(self.ui.lista_detalle_venta.count()):
-            self.ui.lista_detalle_venta.takeItem(row)
+
+        self.ui.lista_detalle_venta.clear()
         self.actualizar_total_venta()
 
     def split_precio(self, cadena):
         precio_sin_texto = cadena[(cadena.find('$'))+1:]
         precio_sin_texto = float(precio_sin_texto.replace(',', ''))
         return precio_sin_texto
+
 
 
 
