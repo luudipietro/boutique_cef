@@ -1,8 +1,9 @@
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QPixmap, QIcon, Qt
 from PySide6.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QWidget, QHBoxLayout, QLabel, QSpinBox, \
-    QVBoxLayout, QSizePolicy, QComboBox, QPushButton, QToolButton
+    QVBoxLayout, QSizePolicy, QComboBox, QPushButton, QToolButton, QListView, QListWidget
 
+from UI.cambiar_producto import crear_items_detalle
 from UI.cancelar_ventas import load_ventas_cancelar, widgets_ventas_cancelar
 from UI.nueva_ventana import NuevaVentana
 from UI.ventanaPrincipal3 import Ui_VentanaPrincipal
@@ -43,12 +44,11 @@ class Inicio(QMainWindow):
                 self.productos.pop()
                 self.productos.append((107,'Camiseta de Juego', '25500', 'camiseta_cef.jpg', ['S', 'M', 'L']))
                 print('Modificacion Stock')
+
             case 2:
-                print('Cambiar')
-            case 3:
                 self.load_cancelar_ventas()
                 print('Cancelar')
-            case 4:
+            case 3:
                 print('Reportes')
 
     def definir_metodos_pago(self):
@@ -66,6 +66,14 @@ class Inicio(QMainWindow):
 
     def mostrar_detalle(self, id):
         self.ventana_detalle = NuevaVentana(f'Detalle Venta {id}')
+        self.lista_detalle = QListWidget()
+        for widget in crear_items_detalle(id):
+            item = QListWidgetItem()
+            item.setSizeHint(QSize(600,80))
+            self.lista_detalle.addItem(item)
+            self.lista_detalle.setItemWidget(item,widget)
+        self.ventana_detalle.layout.addWidget(self.lista_detalle)
+
         self.ventana_detalle.show()
 
 
