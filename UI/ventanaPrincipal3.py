@@ -167,47 +167,43 @@ class Ui_VentanaPrincipal(object):
 
         self.reportes = QWidget()
         self.reportes.setObjectName(u"reportes")
-        self.frame_reportes = QFrame(self.reportes)
-        self.frame_reportes.setObjectName(u"frame_reportes")
-        self.frame_reportes.setGeometry(QRect(0, 0, 661, 641))
-        self.frame_reportes.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_reportes.setFrameShadow(QFrame.Shadow.Raised)
-        self.frame_fecha = QFrame(self.frame_reportes)
-        self.frame_fecha.setObjectName(u"frame_fecha")
-        self.frame_fecha.setGeometry(QRect(10, 0, 661, 421))
-        self.frame_fecha.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_fecha.setFrameShadow(QFrame.Shadow.Raised)
-        self.fecha_ventas_dia = QDateEdit(self.frame_fecha)
+        self.layout_reportes = QVBoxLayout(self.reportes)
+
+
+
+        self.layout_fecha = QHBoxLayout()
+
+        self.fecha_ventas_dia = QDateEdit()
         self.fecha_ventas_dia.setObjectName(u"fecha_ventas_dia")
-        self.fecha_ventas_dia.setGeometry(QRect(30, 20, 110, 31))
-        self.lista_ventas_dia = QListWidget(self.frame_fecha)
-        self.lista_ventas_dia.setObjectName(u"lista_ventas_dia")
-        self.lista_ventas_dia.setGeometry(QRect(10, 70, 621, 331))
-        self.total_vendido = QLabel(self.frame_fecha)
+
+        self.layout_fecha.addWidget(self.fecha_ventas_dia)
+
+
+        self.total_vendido = QLabel()
         self.total_vendido.setObjectName(u"total_vendido")
-        self.total_vendido.setGeometry(QRect(180, 10, 81, 31))
-        self.lbl_total_vendido = QLabel(self.frame_fecha)
-        self.lbl_total_vendido.setObjectName(u"lbl_total_vendido")
-        self.lbl_total_vendido.setGeometry(QRect(170, 30, 81, 31))
-        self.lbl_total_efectivo = QLabel(self.frame_fecha)
-        self.lbl_total_efectivo.setObjectName(u"lbl_total_efectivo")
-        self.lbl_total_efectivo.setGeometry(QRect(280, 30, 81, 31))
-        self.total_efectivo = QLabel(self.frame_fecha)
+
+        self.layout_fecha.addWidget(self.total_vendido)
+        self.total_efectivo = QLabel()
         self.total_efectivo.setObjectName(u"total_efectivo")
-        self.total_efectivo.setGeometry(QRect(290, 10, 81, 31))
-        self.lbl_total_tarjetas = QLabel(self.frame_fecha)
-        self.lbl_total_tarjetas.setObjectName(u"lbl_total_tarjetas")
-        self.lbl_total_tarjetas.setGeometry(QRect(370, 30, 81, 31))
-        self.total_tarjetas = QLabel(self.frame_fecha)
+
+        self.layout_fecha.addWidget(self.total_efectivo)
+        self.total_tarjetas = QLabel()
         self.total_tarjetas.setObjectName(u"total_tarjetas")
-        self.total_tarjetas.setGeometry(QRect(380, 10, 81, 31))
-        self.lbl_total_transferencia = QLabel(self.frame_fecha)
-        self.lbl_total_transferencia.setObjectName(u"lbl_total_transferencia")
-        self.lbl_total_transferencia.setGeometry(QRect(450, 30, 101, 31))
-        self.total_transferencia = QLabel(self.frame_fecha)
+
+        self.layout_fecha.addWidget(self.total_tarjetas)
+        self.total_transferencia = QLabel()
         self.total_transferencia.setObjectName(u"total_transferencia")
-        self.total_transferencia.setGeometry(QRect(480, 10, 81, 31))
-        self.frame_alertas_stock = QFrame(self.frame_reportes)
+
+        self.layout_fecha.addWidget(self.total_transferencia)
+
+        self.layout_reportes.addLayout(self.layout_fecha)
+
+        self.lista_ventas_dia = QListWidget()
+        self.lista_ventas_dia.setObjectName(u"lista_ventas_dia")
+        #self.lista_ventas_dia.setGeometry(QRect(10, 70, 621, 331))
+        self.layout_reportes.addWidget(self.lista_ventas_dia)
+
+        self.frame_alertas_stock = QFrame()
         self.frame_alertas_stock.setObjectName(u"frame_alertas_stock")
         self.frame_alertas_stock.setGeometry(QRect(10, 430, 321, 191))
         self.frame_alertas_stock.setFrameShape(QFrame.Shape.StyledPanel)
@@ -215,7 +211,9 @@ class Ui_VentanaPrincipal(object):
         self.label_faltante_stock = QLabel(self.frame_alertas_stock)
         self.label_faltante_stock.setObjectName(u"label_faltante_stock")
         self.label_faltante_stock.setGeometry(QRect(90, 10, 101, 21))
-        self.frame_descargar_pdfs = QFrame(self.frame_reportes)
+        self.layout_reportes.addWidget(self.frame_alertas_stock)
+
+        self.frame_descargar_pdfs = QFrame()
         self.frame_descargar_pdfs.setObjectName(u"frame_descargar_pdfs")
         self.frame_descargar_pdfs.setGeometry(QRect(340, 430, 311, 201))
         self.frame_descargar_pdfs.setFrameShape(QFrame.Shape.StyledPanel)
@@ -241,6 +239,8 @@ class Ui_VentanaPrincipal(object):
         self.btn_ventas_talle = QPushButton(self.frame_descargar_pdfs)
         self.btn_ventas_talle.setObjectName(u"btn_ventas_talle")
         self.btn_ventas_talle.setGeometry(QRect(20, 140, 281, 24))
+        self.layout_reportes.addWidget(self.frame_descargar_pdfs)
+
         self.pila_menu.addWidget(self.reportes)
 
         self.verticalLayout_3.addWidget(self.pila_menu)
@@ -326,14 +326,13 @@ class Ui_VentanaPrincipal(object):
         self.btn_modificar_precios.setText(QCoreApplication.translate("VentanaPrincipal", u"Modificar precios", None))
         self.btn_cancelar_venta.setText(QCoreApplication.translate("VentanaPrincipal", u"Cancelar la venta", None))
 
-        self.total_vendido.setText(QCoreApplication.translate("VentanaPrincipal", u"$120.000", None))
-        self.lbl_total_vendido.setText(QCoreApplication.translate("VentanaPrincipal", u"Total Vendido", None))
-        self.lbl_total_efectivo.setText(QCoreApplication.translate("VentanaPrincipal", u"Total Efectivo", None))
-        self.total_efectivo.setText(QCoreApplication.translate("VentanaPrincipal", u"$120.000", None))
-        self.lbl_total_tarjetas.setText(QCoreApplication.translate("VentanaPrincipal", u"Total PosNet", None))
-        self.total_tarjetas.setText(QCoreApplication.translate("VentanaPrincipal", u"$120.000", None))
-        self.lbl_total_transferencia.setText(QCoreApplication.translate("VentanaPrincipal", u"Total Transferencia", None))
-        self.total_transferencia.setText(QCoreApplication.translate("VentanaPrincipal", u"$120.000", None))
+        self.total_vendido.setText(QCoreApplication.translate("VentanaPrincipal", u"", None))
+
+        self.total_efectivo.setText(QCoreApplication.translate("VentanaPrincipal", u"", None))
+
+        self.total_tarjetas.setText(QCoreApplication.translate("VentanaPrincipal", u"", None))
+
+        self.total_transferencia.setText(QCoreApplication.translate("VentanaPrincipal", u"", None))
         self.label_faltante_stock.setText(QCoreApplication.translate("VentanaPrincipal", u"Faltantes de Stock", None))
         self.label_descarga_reportes.setText(QCoreApplication.translate("VentanaPrincipal", u"Descarga de Reportes", None))
         self.label_y.setText(QCoreApplication.translate("VentanaPrincipal", u"Y", None))

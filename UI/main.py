@@ -1,14 +1,13 @@
-from PySide6.QtCore import QSize
-from PySide6.QtGui import QPixmap, QIcon, Qt
+from PySide6.QtCore import QSize, QDate
+from PySide6.QtGui import QPixmap, QIcon, Qt, QFont
 from PySide6.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QWidget, QHBoxLayout, QLabel, QSpinBox, \
-    QVBoxLayout, QSizePolicy, QComboBox, QPushButton, QToolButton, QListView, QListWidget
+    QVBoxLayout, QSizePolicy, QComboBox, QPushButton, QToolButton, QListView, QListWidget, QLineEdit, QMessageBox
 
 from UI.cambiar_producto import crear_items_detalle
 from UI.cancelar_ventas import load_ventas_cancelar, widgets_ventas_cancelar
 from UI.nueva_ventana import NuevaVentana
 from UI.ventanaPrincipal3 import Ui_VentanaPrincipal
-
-
+from UI.ventas_del_dia import widgets_ventas_del_dia
 
 
 class Inicio(QMainWindow):
@@ -20,6 +19,10 @@ class Inicio(QMainWindow):
         self.definir_metodos_pago()
         self.ui.btn_limpiar.clicked.connect(self.limpiar_carrito)
         self.ui.pila_menu.currentChanged.connect(self.cambio_menu_principal)
+        self.ui.btn_vender.clicked.connect(self.finalizar_venta)
+        self.ui.fecha_ventas_dia.setDate(QDate.currentDate())
+        self.ui.dateEdit_desde.setDate(QDate.currentDate().addDays(-30))
+        self.ui.dateEdit_hasta.setDate(QDate.currentDate())
         self.productos = [
             (1, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
             (2, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
@@ -35,6 +38,84 @@ class Inicio(QMainWindow):
         self.load_products()
 
 
+    def finalizar_venta(self):
+        if self.ui.label_monto_total.text() != '' and self.ui.label_monto_total.text() != '0.0':
+            self.ventana_factura = NuevaVentana('Finalizar Venta')
+            componente = QWidget()
+            vertica_layout = QVBoxLayout(componente)
+            horizontal_layout = QHBoxLayout()
+            fuente = QFont("Arial",18)
+            total = QLabel(f'Total: ${self.ui.label_monto_total.text()}')
+            total.setFont(fuente)
+            medio_pago = QLabel(f'Medio de Pago: {self.ui.combo_medio_pago.currentText().upper()}')
+            medio_pago.setFont(fuente)
+            horizontal_layout.addWidget(total)
+            horizontal_layout.addWidget(medio_pago)
+            vertica_layout.addLayout(horizontal_layout)
+
+            if self.ui.combo_medio_pago.currentText() == 'Transferencia' or self.ui.combo_medio_pago.currentText() == 'Tarjeta':
+                self.nombre_cliente = QLineEdit()
+                self.correo_cliente = QLineEdit()
+                self.celular_cliente = QLineEdit()
+                self.nombre_cliente.setPlaceholderText('Nombre y Apellido')
+                self.nombre_cliente.setFont(fuente)
+                self.correo_cliente.setPlaceholderText('Correo ')
+                self.correo_cliente.setFont(fuente)
+                self.celular_cliente.setPlaceholderText('Celular')
+                self.celular_cliente.setFont(fuente)
+                vertica_layout.addWidget(self.nombre_cliente)
+                vertica_layout.addWidget(self.correo_cliente)
+                vertica_layout.addWidget(self.celular_cliente)
+
+            boton_cancelar = QPushButton()
+            boton_cancelar.setText('Cancelar')
+            boton_cancelar.clicked.connect(self.ventana_factura.close)
+
+            boton_aceptar = QPushButton()
+            boton_aceptar.setText('Aceptar')
+            boton_aceptar.clicked.connect(self.cargar_venta)
+
+            boton_aceptar.setFont(fuente)
+            boton_cancelar.setFont(fuente)
+
+            vertica_layout.addWidget(boton_cancelar)
+            vertica_layout.addWidget(boton_aceptar)
+            self.ventana_factura.layout.addWidget(componente)
+            self.ventana_factura.show()
+        else:
+            print('El carrito esta vacio')
+
+    def listar_productos_carrito(self):
+        for i in range(self.ui.lista_detalle_venta.count()):
+            item = self.ui.lista_detalle_venta.item(i)
+            widget =self.ui.lista_detalle_venta.itemWidget(item)
+            productos = []
+            if widget:
+                id_prod = int(widget.findChildren(QLabel)[0].text())
+                cant_prod = widget.findChildren(QWidget)[7].text()
+                productos.append((id_prod,cant_prod))
+        return productos
+
+
+    def cargar_venta(self):
+        if hasattr(self, 'nombre_cliente'):
+            if self.nombre_cliente.text() == '' or self.celular_cliente.text() == '' or self.correo_cliente.text() == '':
+                mensaje = QMessageBox()
+                mensaje.setIcon(QMessageBox.Warning)
+                mensaje.setWindowTitle('Advertencia')
+                mensaje.setText('Completar los datos de la factura')
+                mensaje.setStandardButtons(QMessageBox.Ok)
+                mensaje.exec()
+                return
+
+        print(f'Total {self.ui.label_monto_total.text()}'
+              f'Metodo de Pago: {self.ui.combo_medio_pago.currentText()}'
+              f'Productos{self.listar_productos_carrito()}'
+              )
+        self.ui.lista_detalle_venta.clear()
+        self.actualizar_total_venta()
+        self.ventana_factura.close()
+
     def cambio_menu_principal(self, indice):
         match indice:
             case 0:
@@ -49,7 +130,23 @@ class Inicio(QMainWindow):
                 self.load_cancelar_ventas()
                 print('Cancelar')
             case 3:
+                self.caja_diaria()
                 print('Reportes')
+
+
+    def caja_diaria(self):
+        self.ui.lista_ventas_dia.clear()
+        widgets, total, efectivo, tarjeta, transferencia = widgets_ventas_del_dia()
+        for widget in widgets:
+            item = QListWidgetItem()
+            item.setSizeHint(QSize(350, 80))
+
+            self.ui.lista_ventas_dia.addItem(item)
+            self.ui.lista_ventas_dia.setItemWidget(item, widget)
+        self.ui.total_vendido.setText(f'Total: \n${total:,.2f}')
+        self.ui.total_efectivo.setText(f'Efectivo: \n${efectivo:,.2f}')
+        self.ui.total_tarjetas.setText(f'Tarjeta: \n${tarjeta:,.2f}')
+        self.ui.total_transferencia.setText(f'Transferencia: \n${transferencia:,.2f}')
 
     def definir_metodos_pago(self):
         metodos_pago = ['Efectivo', 'Transferencia', 'Tarjeta']
@@ -152,7 +249,6 @@ class Inicio(QMainWindow):
 
 
     def agregar_producto_al_carrito(self, id, nombre, precio_efec, precio_tarj, imagen, talle, cantidad):
-        print(id, nombre, precio_efec, precio_tarj, imagen, talle, cantidad)
         item = QListWidgetItem()
         item.setSizeHint(QSize(305, 80))
         widget = QWidget()
@@ -186,7 +282,7 @@ class Inicio(QMainWindow):
         boton_eliminar_carrito.setIcon(icono)
         boton_eliminar_carrito.setIconSize(QSize(20,80))
 
-
+        layout.addWidget(QLabel(str(id)))
         layout.addWidget(img_label)
         layout.addWidget(widget_nombre_precio)
         layout.addWidget(widget_talles)
@@ -215,7 +311,7 @@ class Inicio(QMainWindow):
             widget =self.ui.lista_detalle_venta.itemWidget(item)
 
             if widget:
-                total += float(widget.findChildren(QLabel)[2].text())
+                total += float(widget.findChildren(QLabel)[3].text())
 
         self.ui.label_monto_total.setText(str(total))
 
