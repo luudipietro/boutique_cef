@@ -167,9 +167,8 @@ class Ui_VentanaPrincipal(object):
 
         self.reportes = QWidget()
         self.reportes.setObjectName(u"reportes")
+
         self.layout_reportes = QVBoxLayout(self.reportes)
-
-
 
         self.layout_fecha = QHBoxLayout()
 
@@ -187,6 +186,7 @@ class Ui_VentanaPrincipal(object):
         self.total_efectivo.setObjectName(u"total_efectivo")
 
         self.layout_fecha.addWidget(self.total_efectivo)
+
         self.total_tarjetas = QLabel()
         self.total_tarjetas.setObjectName(u"total_tarjetas")
 
@@ -198,48 +198,67 @@ class Ui_VentanaPrincipal(object):
 
         self.layout_reportes.addLayout(self.layout_fecha)
 
+        self.layout_lista_ventas_dia = QVBoxLayout()
         self.lista_ventas_dia = QListWidget()
         self.lista_ventas_dia.setObjectName(u"lista_ventas_dia")
-        #self.lista_ventas_dia.setGeometry(QRect(10, 70, 621, 331))
-        self.layout_reportes.addWidget(self.lista_ventas_dia)
+        #self.lista_ventas_dia.setMaximumHeight(300)
+        #self.lista_ventas_dia.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        #self.lista_ventas_dia.setGeometry(QRect(0, 0, 200, 150))
+        self.layout_lista_ventas_dia.addWidget(self.lista_ventas_dia)
 
+
+        self.layout_reportes.addLayout(self.layout_lista_ventas_dia)
+
+        self.layout_stock_y_pdf = QHBoxLayout()
+
+        self.layout_alertas_stock= QVBoxLayout()
         self.frame_alertas_stock = QFrame()
-        self.frame_alertas_stock.setObjectName(u"frame_alertas_stock")
-        self.frame_alertas_stock.setGeometry(QRect(10, 430, 321, 191))
-        self.frame_alertas_stock.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_alertas_stock.setFrameShadow(QFrame.Shadow.Raised)
-        self.label_faltante_stock = QLabel(self.frame_alertas_stock)
-        self.label_faltante_stock.setObjectName(u"label_faltante_stock")
-        self.label_faltante_stock.setGeometry(QRect(90, 10, 101, 21))
-        self.layout_reportes.addWidget(self.frame_alertas_stock)
 
-        self.frame_descargar_pdfs = QFrame()
-        self.frame_descargar_pdfs.setObjectName(u"frame_descargar_pdfs")
-        self.frame_descargar_pdfs.setGeometry(QRect(340, 430, 311, 201))
-        self.frame_descargar_pdfs.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_descargar_pdfs.setFrameShadow(QFrame.Shadow.Raised)
-        self.label_descarga_reportes = QLabel(self.frame_descargar_pdfs)
+        self.label_faltante_stock = QLabel()
+        self.label_faltante_stock.setObjectName(u"label_faltante_stock")
+        self.layout_alertas_stock.addWidget(self.label_faltante_stock)
+
+
+        self.layout_stock_y_pdf.addLayout(self.layout_alertas_stock)
+
+
+        self.layout_descargar_pdfs = QVBoxLayout()
+
+        self.label_descarga_reportes = QLabel()
         self.label_descarga_reportes.setObjectName(u"label_descarga_reportes")
-        self.label_descarga_reportes.setGeometry(QRect(90, 10, 121, 20))
-        self.dateEdit_desde = QDateEdit(self.frame_descargar_pdfs)
+
+        self.layout_fecha_desde_hasta = QHBoxLayout()
+
+        self.dateEdit_desde = QDateEdit()
         self.dateEdit_desde.setObjectName(u"dateEdit_desde")
-        self.dateEdit_desde.setGeometry(QRect(10, 40, 110, 22))
-        self.label_y = QLabel(self.frame_descargar_pdfs)
+
+        self.label_y = QLabel()
         self.label_y.setObjectName(u"label_y")
-        self.label_y.setGeometry(QRect(140, 40, 21, 20))
-        self.dateEdit_hasta = QDateEdit(self.frame_descargar_pdfs)
+
+        self.dateEdit_hasta = QDateEdit()
         self.dateEdit_hasta.setObjectName(u"dateEdit_hasta")
-        self.dateEdit_hasta.setGeometry(QRect(170, 40, 110, 22))
-        self.btn_ingresos_egresos = QPushButton(self.frame_descargar_pdfs)
+
+        self.layout_fecha_desde_hasta.addWidget(self.dateEdit_desde)
+        self.layout_fecha_desde_hasta.addWidget(self.label_y)
+        self.layout_fecha_desde_hasta.addWidget(self.dateEdit_hasta)
+
+        self.btn_ingresos_egresos = QPushButton()
         self.btn_ingresos_egresos.setObjectName(u"btn_ingresos_egresos")
-        self.btn_ingresos_egresos.setGeometry(QRect(20, 80, 281, 24))
-        self.btn_ventas_producto = QPushButton(self.frame_descargar_pdfs)
+
+        self.btn_ventas_producto = QPushButton()
         self.btn_ventas_producto.setObjectName(u"btn_ventas_producto")
-        self.btn_ventas_producto.setGeometry(QRect(20, 110, 281, 24))
-        self.btn_ventas_talle = QPushButton(self.frame_descargar_pdfs)
+
+        self.btn_ventas_talle = QPushButton()
         self.btn_ventas_talle.setObjectName(u"btn_ventas_talle")
-        self.btn_ventas_talle.setGeometry(QRect(20, 140, 281, 24))
-        self.layout_reportes.addWidget(self.frame_descargar_pdfs)
+
+        self.layout_descargar_pdfs.addWidget(self.label_descarga_reportes)
+        self.layout_descargar_pdfs.addLayout(self.layout_fecha_desde_hasta)
+        self.layout_descargar_pdfs.addWidget(self.btn_ingresos_egresos)
+        self.layout_descargar_pdfs.addWidget(self.btn_ventas_producto)
+        self.layout_descargar_pdfs.addWidget(self.btn_ventas_talle)
+
+        self.layout_stock_y_pdf.addLayout(self.layout_descargar_pdfs)
+        self.layout_reportes.addLayout(self.layout_stock_y_pdf)
 
         self.pila_menu.addWidget(self.reportes)
 
