@@ -38,6 +38,19 @@ class Inicio(QMainWindow):
         self.load_products()
 
 
+    def crear_ventana_modificar_cantidades(self):
+        self.ventana_modificar_cantidades = NuevaVentana('Modificar cantidades')
+        self.lista_modificar_cantidades = QListWidget()
+        for widget in crear_items_modificar_cantidades(id):
+            item = QListWidgetItem()
+            item.setSizeHint(QSize(600, 80))
+            self.lista_modificar_cantidades.addItem(item)
+            self.lista_modificar_cantidades.setItemWidget(item, widget)
+        self.ventana_modificar_cantidades.layout.addWidget(self.lista_detalle)
+
+        self.ventana_modificar_cantidades.show()
+
+
     def finalizar_venta(self):
         if self.ui.label_monto_total.text() != '' and self.ui.label_monto_total.text() != '0.0':
             self.ventana_factura = NuevaVentana('Finalizar Venta')
