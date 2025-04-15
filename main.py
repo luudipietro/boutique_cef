@@ -1,13 +1,14 @@
 from PySide6.QtCore import QSize, QDate
 from PySide6.QtGui import QPixmap, QIcon, Qt, QFont
 from PySide6.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QWidget, QHBoxLayout, QLabel, QSpinBox, \
-    QVBoxLayout, QSizePolicy, QComboBox, QPushButton, QToolButton, QListView, QListWidget, QLineEdit, QMessageBox
+    QVBoxLayout, QSizePolicy, QComboBox, QPushButton, QToolButton, QListWidget, QLineEdit, QMessageBox
 
-from UI.cambiar_producto import crear_items_detalle
-from UI.cancelar_ventas import load_ventas_cancelar, widgets_ventas_cancelar
-from UI.nueva_ventana import NuevaVentana
-from UI.ventanaPrincipal3 import Ui_VentanaPrincipal
-from UI.ventas_del_dia import widgets_ventas_del_dia
+from cambiar_producto import crear_items_detalle
+from cancelar_ventas import widgets_ventas_cancelar
+from clases.produto_dao import ProductoDAO
+from nueva_ventana import NuevaVentana
+from ventanaPrincipal3 import Ui_VentanaPrincipal
+from ventas_del_dia import widgets_ventas_del_dia
 
 
 class Inicio(QMainWindow):
@@ -23,18 +24,7 @@ class Inicio(QMainWindow):
         self.ui.fecha_ventas_dia.setDate(QDate.currentDate())
         self.ui.dateEdit_desde.setDate(QDate.currentDate().addDays(-30))
         self.ui.dateEdit_hasta.setDate(QDate.currentDate())
-        self.productos = [
-            (1, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (2, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (3, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (4, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (5, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (6, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (7, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (8, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (9, 'Camiseta de Juego', '22500', 'camiseta_cef.jpg', ['S', 'M', 'L']),
-            (10, 'Camiseta de Juego', '500', 'camiseta_cef.jpg', ['S', 'M', 'L'])
-        ]
+
         self.load_products()
 
 
@@ -98,20 +88,24 @@ class Inicio(QMainWindow):
         else:
             print('El carrito esta vacio')
 
-    def listar_productos_carrito(self):
+    def listar_productos_carrito(self, metodo_pago):
+        productos = []
         for i in range(self.ui.lista_detalle_venta.count()):
             item = self.ui.lista_detalle_venta.item(i)
-            widget =self.ui.lista_detalle_venta.itemWidget(item)
-            productos = []
-            if widget:
-                id_prod = int(widget.findChildren(QLabel)[0].text())
-                cant_prod = widget.findChildren(QWidget)[7].text()
-                productos.append((id_prod,cant_prod))
+
+            if item:
+                label_precio, precio_efec, precio_tarj, cantidad, id_talle, id_prod, item = item.data(Qt.UserRole)
+                if metodo_pago == 1 or metodo_pago == 2:
+                    productos.append((id_prod, id_talle,cantidad, precio_efec, cantidad * precio_efec))
+                else:
+                    productos.append((id_prod, id_talle,cantidad, precio_tarj, cantidad * precio_tarj))
         return productos
 
 
     def cargar_venta(self):
+        id_cliente = 1
         if hasattr(self, 'nombre_cliente'):
+            id_cliente=2
             if self.nombre_cliente.text() == '' or self.celular_cliente.text() == '' or self.correo_cliente.text() == '':
                 mensaje = QMessageBox()
                 mensaje.setIcon(QMessageBox.Warning)
@@ -121,13 +115,16 @@ class Inicio(QMainWindow):
                 mensaje.exec()
                 return
 
-        print(f'Total {self.ui.label_monto_total.text()}'
-              f'Metodo de Pago: {self.ui.combo_medio_pago.currentText()}'
-              f'Productos{self.listar_productos_carrito()}'
+        print(f'Total Venta {float(self.ui.label_monto_total.text())}  '
+              f'Id Metodo de Pago: {self.ui.combo_medio_pago.currentIndex()+1}  '
+              f'Id Cliente {id_cliente}  '
+              f'Detalle Venta Producto  '
+              f'Productos{self.listar_productos_carrito(self.ui.combo_medio_pago.currentIndex()+1)}' #paso el id del metodo de pago
               )
         self.ui.lista_detalle_venta.clear()
         self.actualizar_total_venta()
         self.ventana_factura.close()
+        #return float(self.ui.label_monto_total.text()),self.ui.combo_medio_pago.currentIndex()+1,self.listar_productos_carrito()
 
     def cambio_menu_principal(self, indice):
         match indice:
@@ -135,8 +132,6 @@ class Inicio(QMainWindow):
                 self.load_products()
                 print('Carga productos')
             case 1:
-                self.productos.pop()
-                self.productos.append((107,'Camiseta de Juego', '25500', 'camiseta_cef.jpg', ['S', 'M', 'L']))
                 print('Modificacion Stock')
 
             case 2:
@@ -189,61 +184,78 @@ class Inicio(QMainWindow):
 
     def load_products(self):
         self.ui.lista_productos.clear()
+        self.productos = ProductoDAO.seleccionar_productos_venta()
         #tomar produtos bd
-        for id, nombre, precio, imagen, talles in self.productos:
-            self.agregar_producto(id, nombre, precio, imagen, talles)
+        for p in self.productos:
+            self.agregar_producto(p.id, p.nombre, p.talles)
 
-    def agregar_producto(self, id, nombre, precio, imagen, talles):
+    def agregar_producto(self, id, nombre, talles):
         item = QListWidgetItem()
         item.setSizeHint(QSize(350,80))
 
         widget = QWidget()
         layout = QHBoxLayout(widget)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(40)
+        layout.setSpacing(10)
         img_label = QLabel()
-        pixmap = QPixmap(f'../img/{imagen}').scaled(75,75)
+        pixmap = QPixmap(f'img/{nombre}.png').scaled(75,75)
         img_label.setPixmap(pixmap)
 
         widget_precios = QWidget()
         layout_precios = QVBoxLayout(widget_precios)
-        precio = float(precio)
-        label_efectivo = QLabel(f'Efectivo: ${precio:,}')
-        label_tarjeta = QLabel(f'Tarjeta: ${precio * 1.15:,.2f}')
+        precio_efectivo = float(talles[0].precio_efectivo)
+        precio_tarjeta = float(talles[0].precio_tarjeta)
+        label_efectivo = QLabel(f'Efectivo: ${precio_efectivo:,.2f}')
+        label_tarjeta = QLabel(f'Tarjeta: ${precio_tarjeta:,.2f}')
         layout_precios.addWidget(label_efectivo)
         layout_precios.addWidget(label_tarjeta)
 
-        text_label = QLabel(nombre)
+        text_label = QLabel(nombre.upper())
 
         cantidad = QSpinBox()
         cantidad.setMinimum(1)
         cantidad.setProperty('label_efectivo', label_efectivo)
         cantidad.setProperty('label_tarjeta', label_tarjeta)
-        cantidad.setProperty('precio_base', precio)
-        cantidad.valueChanged.connect(self.actualizar_precio)
+        cantidad.setProperty('precio_efectivo', precio_efectivo)
+        cantidad.setProperty('precio_tarjeta', precio_tarjeta)
         cantidad.resize(100,20)
         cantidad.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         cantidad.setValue(1)
         cantidad.setMinimum(1)
 
+
+
+
+
         widget_talles =QWidget()
         layout_talles =QVBoxLayout(widget_talles)
         cbo_talle = QComboBox()
-        cbo_talle.addItems(talles)
+        for t in talles:
+            data = {
+                'idTalle': t.idTalle,
+                't_precio_efectivo': t.precio_efectivo,
+                't_precio_tarjeta': t.precio_tarjeta,
+            }
+            cbo_talle.addItem(t.talle, data)
+        cbo_talle.setProperty('precio_efectivo', precio_efectivo)
+        cbo_talle.setProperty('precio_tarjeta', precio_tarjeta)
+        cbo_talle.setProperty('label_efectivo', label_efectivo)
+        cbo_talle.setProperty('label_tarjeta', label_tarjeta)
         cbo_talle.resize(150,20)
         cbo_talle.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        cbo_talle.currentIndexChanged.connect(self.actualizar_precio)
         layout_talles.addWidget(cbo_talle)
         layout_talles.addWidget(cantidad)
 
         boton_agregar = QToolButton()
-        pixmap = QPixmap('../img/agregar_carrito.png')
+        pixmap = QPixmap('img/agregar_carrito.png')
         icono = QIcon(pixmap)
         boton_agregar.setIcon(icono)
         boton_agregar.setText('Agregar')
         boton_agregar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
         boton_agregar.clicked.connect(
-            lambda: self.agregar_producto_al_carrito(id, nombre, self.split_precio(label_efectivo.text()), self.split_precio(label_tarjeta.text()), imagen, cbo_talle.currentText(),
-                                                     cantidad.value()))
+            lambda: self.agregar_producto_al_carrito(id, nombre, self.split_precio(label_efectivo.text()), self.split_precio(label_tarjeta.text()), nombre, cbo_talle.currentText(),
+                                                     cantidad.value(), cbo_talle.currentData()['idTalle']))
 
 
         layout_talles.setContentsMargins(0, 0, 0, 0)
@@ -261,7 +273,8 @@ class Inicio(QMainWindow):
 
 
 
-    def agregar_producto_al_carrito(self, id, nombre, precio_efec, precio_tarj, imagen, talle, cantidad):
+
+    def agregar_producto_al_carrito(self, idProd, nombre, precio_efec, precio_tarj, imagen, talle, cantidad, idTalle):
         item = QListWidgetItem()
         item.setSizeHint(QSize(305, 80))
         widget = QWidget()
@@ -269,12 +282,12 @@ class Inicio(QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(10)
         img_label = QLabel()
-        pixmap = QPixmap(f'../img/{imagen}').scaled(75, 75)
+        pixmap = QPixmap(f'img/{imagen}').scaled(75, 75)
         img_label.setPixmap(pixmap)
         if self.ui.combo_medio_pago.currentText() == 'Efectivo' or self.ui.combo_medio_pago.currentText() == 'Transferencia':
-            self.label_precio = QLabel(str(precio_efec))
+            self.label_precio = QLabel(str(precio_efec * cantidad))
         else:
-            self.label_precio = QLabel(str(precio_tarj))
+            self.label_precio = QLabel(str(precio_tarj * cantidad))
         label_nombre = QLabel(nombre)
 
         widget_nombre_precio = QWidget()
@@ -284,18 +297,18 @@ class Inicio(QMainWindow):
 
         widget_talles = QWidget()
         layout_talles = QVBoxLayout(widget_talles)
-        layout_talles.addWidget(QLabel(str(talle)))
+        layout_talles.addWidget(QLabel(f'T:{talle}'))
         layout_talles.addWidget(QLabel(str(cantidad)))
         layout_talles.setContentsMargins(0, 0, 0, 0)
 
 
         boton_eliminar_carrito = QToolButton()
-        pixmap = QPixmap('../img/eliminar_carrito.png')
+        pixmap = QPixmap('img/eliminar_carrito.png')
         icono = QIcon(pixmap)
         boton_eliminar_carrito.setIcon(icono)
         boton_eliminar_carrito.setIconSize(QSize(20,80))
 
-        layout.addWidget(QLabel(str(id)))
+        #layout.addWidget(QLabel(str(id)))
         layout.addWidget(img_label)
         layout.addWidget(widget_nombre_precio)
         layout.addWidget(widget_talles)
@@ -306,7 +319,7 @@ class Inicio(QMainWindow):
         self.ui.lista_detalle_venta.setItemWidget(item, widget)
 
         # Guardamos referencias para actualizar el precio más tarde
-        item.setData(Qt.UserRole, (self.label_precio, precio_efec, precio_tarj, item))
+        item.setData(Qt.UserRole, (self.label_precio, precio_efec, precio_tarj, cantidad, idTalle, idProd, item))
 
         boton_eliminar_carrito.clicked.connect(lambda: self.eliminar_producto_del_carrito(item))
 
@@ -324,7 +337,7 @@ class Inicio(QMainWindow):
             widget =self.ui.lista_detalle_venta.itemWidget(item)
 
             if widget:
-                total += float(widget.findChildren(QLabel)[3].text())
+                total += float(widget.findChildren(QLabel)[2].text())
 
         self.ui.label_monto_total.setText(str(total))
 
@@ -340,21 +353,24 @@ class Inicio(QMainWindow):
         for i in range(self.ui.lista_detalle_venta.count()):
             item = self.ui.lista_detalle_venta.item(i)
             if item:
-                label_precio, precio_efec, precio_tarj, item = item.data(Qt.UserRole)
+                label_precio, precio_efec, precio_tarj, cantidad, idTalle, idProd, item = item.data(Qt.UserRole)
+
                 if self.ui.combo_medio_pago.currentText() == 'Efectivo' or self.ui.combo_medio_pago.currentText() == 'Transferencia':
-                    label_precio.setText(str(precio_efec))
+                    label_precio.setText(str(precio_efec * cantidad))
                 else:
-                    label_precio.setText(str(precio_tarj))
+                    label_precio.setText(str(precio_tarj * cantidad))
         self.actualizar_total_venta()
 
     def actualizar_precio(self, valor):
-        spinbox = self.sender() #sender obtiene el objeto que lo invoco
-        label_efectivo = spinbox.property('label_efectivo')
-        label_tarjeta = spinbox.property('label_tarjeta')
-        precio_base = spinbox.property('precio_base')
-
-        label_efectivo.setText(f'Efectivo: ${(precio_base * valor):,}')
-        label_tarjeta.setText(f'Tarjeta: ${(precio_base * valor) * 1.15:,.2f}')
+        combobox = self.sender() #sender obtiene el objeto que lo invoco
+        label_efectivo = combobox.property('label_efectivo')
+        label_tarjeta = combobox.property('label_tarjeta')
+        precio_efectivo = combobox.property('precio_efectivo')
+        precio_tarjeta = combobox.property('precio_tarjeta')
+        precio_efectivo = combobox.currentData()['t_precio_efectivo']
+        precio_tarjeta = combobox.currentData()['t_precio_tarjeta']
+        label_efectivo.setText(f'Efectivo: ${(precio_efectivo):,}')
+        label_tarjeta.setText(f'Tarjeta: ${(precio_tarjeta):,.2f}')
 
     def limpiar_carrito(self):
 

@@ -92,24 +92,24 @@ class Ui_VentanaPrincipal(object):
         self.lista_productos.setObjectName(u"lista_productos")
         #self.lista_productos.setContentsMargins(0,0,0,0)
         self.lista_productos.setGeometry(QRect(20, 30, 631, 511))
-        self.lista_productos.setStyleSheet(u"QListWidget {\n"
-"        background-color: #b8b6b2; /* Color de fondo gris claro */\n"                                          
-"        border: 1px solid #ccc; /* Borde gris */\n"
-"        padding: 0px;\n"
-"    }\n"
-"    \n"
-"    QListWidget::item {\n"
-"        background-color: white; /* Fondo de cada item */\n"
-"        border: 1px solid transparent; /* Borde invisible */\n"
-"        padding: 0px ;\n"
-"        margin-bottom: 1px;\n"                                           
-"    }\n"
-"\n"
-
-"\n"
-"    QListWidget::item:hover {\n"
-"        background-color: #e0e0e0; /* Fondo gris claro al pasar el mouse */\n"
-"    }")
+#         self.lista_productos.setStyleSheet(u"QListWidget {\n"
+# "        background-color: #b8b6b2; /* Color de fondo gris claro */\n"
+# "        border: 1px solid #ccc; /* Borde gris */\n"
+# "        padding: 0px;\n"
+# "    }\n"
+# "    \n"
+# "    QListWidget::item {\n"
+# "        background-color: white; /* Fondo de cada item */\n"
+# "        border: 1px solid transparent; /* Borde invisible */\n"
+# "        padding: 0px ;\n"
+# "        margin-bottom: 1px;\n"
+# "    }\n"
+# "\n"
+#
+# "\n"
+# "    QListWidget::item:hover {\n"
+# "        background-color: #e0e0e0; /* Fondo gris claro al pasar el mouse */\n"
+# "    }")
         self.btn_agregar_gasto = QPushButton(self.venta_productos)
         self.btn_agregar_gasto.setObjectName(u"btn_agregar_gasto")
         self.btn_agregar_gasto.setGeometry(QRect(20, 570, 111, 41))
@@ -289,24 +289,24 @@ class Ui_VentanaPrincipal(object):
         self.lista_detalle_venta = QListWidget(self.carrito)
         self.lista_detalle_venta.setObjectName(u"lista_detalle_venta")
         self.lista_detalle_venta.setGeometry(QRect(10, 50, 311, 491))
-        self.lista_detalle_venta.setStyleSheet(u"QListWidget {\n"
-                                           "        background-color: #b8b6b2; /* Color de fondo gris claro */\n"
-                                           "        border: 1px solid #ccc; /* Borde gris */\n"
-                                           "        padding: 0px;\n"
-                                           "    }\n"
-                                           "    \n"
-                                           "    QListWidget::item {\n"
-                                           "        background-color: white; /* Fondo de cada item */\n"
-                                           "        border: 1px solid transparent; /* Borde invisible */\n"
-                                           "        padding: 0px ;\n"
-                                           "        margin-bottom: 1px;\n"
-                                           "    }\n"
-                                           "\n"
-
-                                           "\n"
-                                           "    QListWidget::item:hover {\n"
-                                           "        background-color: #e0e0e0; /* Fondo gris claro al pasar el mouse */\n"
-                                           "    }")
+        # self.lista_detalle_venta.setStyleSheet(u"QListWidget {\n"
+        #                                    "        background-color: #b8b6b2; /* Color de fondo gris claro */\n"
+        #                                    "        border: 1px solid #ccc; /* Borde gris */\n"
+        #                                    "        padding: 0px;\n"
+        #                                    "    }\n"
+        #                                    "    \n"
+        #                                    "    QListWidget::item {\n"
+        #                                    "        background-color: white; /* Fondo de cada item */\n"
+        #                                    "        border: 1px solid transparent; /* Borde invisible */\n"
+        #                                    "        padding: 0px ;\n"
+        #                                    "        margin-bottom: 1px;\n"
+        #                                    "    }\n"
+        #                                    "\n"
+        #
+        #                                    "\n"
+        #                                    "    QListWidget::item:hover {\n"
+        #                                    "        background-color: #e0e0e0; /* Fondo gris claro al pasar el mouse */\n"
+        #                                    "    }")
         self.btn_limpiar = QPushButton(self.carrito)
         self.btn_limpiar.setObjectName(u"btn_limpiar")
         self.btn_limpiar.setGeometry(QRect(30, 640, 121, 51))
