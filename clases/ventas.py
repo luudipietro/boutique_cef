@@ -1,5 +1,5 @@
 class Venta:
-    def __init__(self, id_venta, total, metodo_pago, id_cliente):
+    def __init__(self, id_venta, total, metodo_pago, id_cliente=None):
         self.id_venta = id_venta
         self.total = total
         self.metodo_pago = metodo_pago
