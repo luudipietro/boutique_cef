@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from PySide6.QtCore import QSize, QDate
 from PySide6.QtGui import QPixmap, QIcon, Qt, QFont
 from PySide6.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QWidget, QHBoxLayout, QLabel, QSpinBox, \
@@ -24,6 +26,7 @@ class Inicio(QMainWindow):
         self.ui.fecha_ventas_dia.setDate(QDate.currentDate())
         self.ui.dateEdit_desde.setDate(QDate.currentDate().addDays(-30))
         self.ui.dateEdit_hasta.setDate(QDate.currentDate())
+        self.ui.fecha_ventas_dia.dateChanged.connect(self.caja_diaria)
 
         self.load_products()
 
@@ -138,23 +141,33 @@ class Inicio(QMainWindow):
                 self.load_cancelar_ventas()
                 print('Cancelar')
             case 3:
+
                 self.caja_diaria()
                 print('Reportes')
 
 
     def caja_diaria(self):
         self.ui.lista_ventas_dia.clear()
-        widgets, total, efectivo, tarjeta, transferencia = widgets_ventas_del_dia()
-        for widget in widgets:
-            item = QListWidgetItem()
-            item.setSizeHint(QSize(350, 80))
+        fecha = self.ui.fecha_ventas_dia.date().toPython()
+        if not widgets_ventas_del_dia(fecha):
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Warning)
+            mensaje.setWindowTitle('Advertencia')
+            mensaje.setText('No hay ventas en esta fecha')
+            mensaje.setStandardButtons(QMessageBox.Ok)
+            mensaje.exec()
+        else:
+            widgets, total, efectivo, tarjeta, transferencia = widgets_ventas_del_dia(fecha)
+            for widget in widgets:
+                item = QListWidgetItem()
+                item.setSizeHint(QSize(350, 80))
 
-            self.ui.lista_ventas_dia.addItem(item)
-            self.ui.lista_ventas_dia.setItemWidget(item, widget)
-        self.ui.total_vendido.setText(f'Total: \n${total:,.2f}')
-        self.ui.total_efectivo.setText(f'Efectivo: \n${efectivo:,.2f}')
-        self.ui.total_tarjetas.setText(f'Tarjeta: \n${tarjeta:,.2f}')
-        self.ui.total_transferencia.setText(f'Transferencia: \n${transferencia:,.2f}')
+                self.ui.lista_ventas_dia.addItem(item)
+                self.ui.lista_ventas_dia.setItemWidget(item, widget)
+            self.ui.total_vendido.setText(f'Total: \n${total:,.2f}')
+            self.ui.total_efectivo.setText(f'Efectivo: \n${efectivo:,.2f}')
+            self.ui.total_tarjetas.setText(f'Tarjeta: \n${tarjeta:,.2f}')
+            self.ui.total_transferencia.setText(f'Transferencia: \n${transferencia:,.2f}')
 
     def definir_metodos_pago(self):
         metodos_pago = ['Efectivo', 'Transferencia', 'Tarjeta']

@@ -16,9 +16,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QFrame,
-    QHBoxLayout, QLabel, QListWidget,
-    QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
-    QStackedWidget, QVBoxLayout, QWidget)
+                               QHBoxLayout, QLabel, QListWidget,
+                               QListWidgetItem, QMainWindow, QPushButton, QSizePolicy,
+                               QStackedWidget, QVBoxLayout, QWidget, QCalendarWidget)
 
 class Ui_VentanaPrincipal(object):
     def setupUi(self, VentanaPrincipal):
@@ -173,6 +173,7 @@ class Ui_VentanaPrincipal(object):
         self.layout_fecha = QHBoxLayout()
 
         self.fecha_ventas_dia = QDateEdit()
+        self.fecha_ventas_dia.setCalendarPopup(True)
         self.fecha_ventas_dia.setObjectName(u"fecha_ventas_dia")
 
         self.layout_fecha.addWidget(self.fecha_ventas_dia)

@@ -1,8 +1,10 @@
 class Venta:
-    def __init__(self, id_venta, total, metodo_pago, id_cliente=None):
+    def __init__(self, id_venta, total, metodo_pago,nro_recibo,id_cliente=None, fecha=None):
         self.id_venta = id_venta
         self.total = total
         self.metodo_pago = metodo_pago
+        self.nro_recibo = nro_recibo
+        self.fecha = fecha
         self.id_cliente = id_cliente
 
 class DetalleVentaProducto:

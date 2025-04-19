@@ -2,7 +2,7 @@ from clases.ventas import Venta, DetalleVentaProducto, DetalleVentaCombo, Detall
 from conexion import Conexion
 
 
-class ventasDAO:
+class VentasDAO:
     SELECCIONAR = """
     SELECT
         v.idVenta,
@@ -15,41 +15,50 @@ class ventasDAO:
     LEFT JOIN Cliente cl ON v.idCliente = cl.idCliente
     ORDER BY v.fecha DESC;
     """
-    SELECTFECHA = """"
+    SELECTFECHA = """
     SELECT
             v.idVenta,
             v.total_venta,
-            v.fecha,
             mp.nombre AS metodo_pago,
-            cl.nombre AS cliente
+            cl.nombre AS cliente,
+            v.nro_recibo
         FROM Venta v
         JOIN Metodo_Pago mp ON v.idMetodo_Pago = mp.idMetodo_Pago
         LEFT JOIN Cliente cl ON v.idCliente = cl.idCliente
-        WHERE v.fecha == %s
+        WHERE DATE(v.fecha) = %s
         ORDER BY v.fecha DESC;
         """
 
+
     SELECTDETALLESVENTAS = """
     SELECT
-        dvp.idDetalle_Venta_Producto,
-        dvp.idVenta,dvp.id_producto,dvp.id_talle, dvp.cantidad, dvp.precio_unitario, dvp.precio_total 
+        dvp.idDetalle_Venta,
+        dvp.idVenta,
+        dvp.idProducto,
+        dvp.idTalle, 
+        dvp.cantidad, 
+        dvp.precio_unitario, 
+        dvp.precio_total 
     FROM Detalle_Venta_Producto dvp
-    WHERE dvp.idVenta == %s
+    WHERE dvp.idVenta = 1
     ORDER BY dvp.idProducto;
         """
     SELECTDETALLESVENTASCOMBOS = """"
     SELECT
-        dvc.id_detalle_venta_combo, dvc.id_venta, dvc.id_combo
+        dvc.idDetalle_Venta_Combo, dvc.Venta_idVenta, dvc.Combo_idCombo
     FROM Detalle_Venta_Combo dvc
-    WHERE dvc.idVenta == %s
-    ORDER BY dvc.id_combo;
+    WHERE dvc.Venta_idVenta = 1
+    ORDER BY dvc.Combo_idCombo;
     """
     SELECTDETALLEVENTAPRODUCTOCOMBO = """
     SELECT
-        dvpc.id_detalle_venta_producto_combo, dvpc.id_detalle_venta, dvpc.id_producto, dvpc.id_talle, cantidad
+        dvpc.idDetalle_Venta_Producto_Combo, 
+        dvpc.idDetalle_Venta_Combo, 
+        dvpc.idProducto, 
+        dvpc.idTalle, cantidad
     FROM Detalle_Venta_Producto_Combo dvpc
-    WHERE dvpc.id_detalle_venta_producto == %s
-    ORDER BY dvpc.id_producto;    
+    WHERE dvpc.idDetalle_Venta_Producto_Combo = 1
+    ORDER BY idProducto;  
     """
     
         
@@ -63,11 +72,11 @@ class ventasDAO:
             cursor.execute(cls.SELECCIONAR)
             registros = cursor.fetchall()
             ventas = []
-            for id_venta, total, fecha,metodo_pago, id_cliente in registros:
+            for id_venta, total, metodo_pago, id_cliente,fecha in registros:
                 if id_cliente:
-                    v = Venta(id_venta, total, metodo_pago, id_cliente)
+                    v = Venta(id_venta, total, fecha, metodo_pago, id_cliente)
                 else:
-                    v = Venta(id_venta, total, metodo_pago)
+                    v = Venta(id_venta, total, fecha, metodo_pago)
                 ventas.append(v)
 
             return ventas
@@ -88,11 +97,11 @@ class ventasDAO:
             cursor.execute(cls.SELECTFECHA, valores)
             registros = cursor.fetchall()
             ventas = []
-            for id_venta, total, metodo_pago, id_cliente in registros:
-                if id_cliente:
-                    v = Venta(id_venta, total, metodo_pago, id_cliente)
+            for id_venta, total, metodo_pago, cliente, nro_recibo in registros:
+                if cliente:
+                    v = Venta(id_venta, total, metodo_pago, nro_recibo, cliente)
                 else:
-                    v = Venta(id_venta, total, metodo_pago)
+                    v = Venta(id_venta, total, metodo_pago,nro_recibo, 'Cliente no existe ')
                 ventas.append(v)
 
             return ventas
@@ -171,4 +180,11 @@ class ventasDAO:
                 Conexion.liberar_conexion(conexion)
 
 if __name__ == '__main__':
-   pass
+    ventas = ventasDAO.seleccionar_ventas()
+    detalle_prod = ventasDAO.seleccionar_detalles_venta(8)
+    detalle_combo = ventasDAO.seleccionar_combo_venta(8)
+    detalle_producto_combo = ventasDAO.seleccionar_producto_combo(1)
+
+
+    print(f'total: {ventas[0].total} fecha {ventas[0].fecha}')
+    print(f'detalle: ')
