@@ -8,14 +8,17 @@ class Venta:
         self.id_cliente = id_cliente
 
 class DetalleVentaProducto:
-    def __init__(self, id_detalle_venta_producto, id_venta, id_producto,id_talle, cantidad, precio_unitario, precio_total):
+    def __init__(self, id_detalle_venta_producto, id_venta, id_producto, id_talle, precio_unitario,nombre_producto=None,talle=None):
         self.id_detalle_venta_producto = id_detalle_venta_producto
         self.id_venta = id_venta
         self.id_producto = id_producto
+        self.nombre_producto = nombre_producto
         self.id_talle = id_talle
-        self.cantidad = cantidad
-        self.precio_total = precio_total
+        self.talle = talle
         self.precio_unitario = precio_unitario
+
+    def cambiar_talle(self, talle_nuevo):
+        self.id_talle = talle_nuevo
 
 class DetalleVentaCombo:
     def __init__(self, id_detalle_venta_combo, id_venta, id_combo):
@@ -30,3 +33,8 @@ class DetalleVentaProductoCombo:
         self.id_producto = id_producto
         self.id_talle = id_talle
         self.cantidad= cantidad
+
+class Talle:
+    def __init__(self, id_talle, talle):
+        self.id_talle= id_talle
+        self.talle= talle

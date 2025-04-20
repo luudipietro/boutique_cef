@@ -9,3 +9,4 @@ class NuevaVentana(QDialog):
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
         self.setWindowTitle(titulo_ventana)
+        self.setStyleSheet('QLabel, QPushButton, QComboBox, QWidget, QLineEdit {font-size: 24px; font-family: Arial; }')

@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QWidge
 from cambiar_producto import crear_items_detalle
 from cancelar_ventas import widgets_ventas_cancelar
 from clases.produto_dao import ProductoDAO
+from clases.ventas_dao import VentasDAO
 from nueva_ventana import NuevaVentana
 from ventanaPrincipal3 import Ui_VentanaPrincipal
 from ventas_del_dia import widgets_ventas_del_dia
@@ -27,7 +28,7 @@ class Inicio(QMainWindow):
         self.ui.dateEdit_desde.setDate(QDate.currentDate().addDays(-30))
         self.ui.dateEdit_hasta.setDate(QDate.currentDate())
         self.ui.fecha_ventas_dia.dateChanged.connect(self.caja_diaria)
-
+        self.setStyleSheet('QLabel, QPushButton, QComboBox, QWidget, QLineEdit {font-size: 18px; font-family: Arial; }')
         self.load_products()
 
 
@@ -49,12 +50,15 @@ class Inicio(QMainWindow):
             self.ventana_factura = NuevaVentana('Finalizar Venta')
             componente = QWidget()
             vertica_layout = QVBoxLayout(componente)
+
             horizontal_layout = QHBoxLayout()
-            fuente = QFont("Arial",18)
+            horizontal_layout.setAlignment(Qt.AlignCenter)
+            horizontal_layout.setSpacing(250)
+            #fuente = QFont("Arial",18)
             total = QLabel(f'Total: ${self.ui.label_monto_total.text()}')
-            total.setFont(fuente)
+            #total.setFont(fuente)
             medio_pago = QLabel(f'Medio de Pago: {self.ui.combo_medio_pago.currentText().upper()}')
-            medio_pago.setFont(fuente)
+            #medio_pago.setFont(fuente)
             horizontal_layout.addWidget(total)
             horizontal_layout.addWidget(medio_pago)
             vertica_layout.addLayout(horizontal_layout)
@@ -64,11 +68,11 @@ class Inicio(QMainWindow):
                 self.correo_cliente = QLineEdit()
                 self.celular_cliente = QLineEdit()
                 self.nombre_cliente.setPlaceholderText('Nombre y Apellido')
-                self.nombre_cliente.setFont(fuente)
+                #self.nombre_cliente.setFont(fuente)
                 self.correo_cliente.setPlaceholderText('Correo ')
-                self.correo_cliente.setFont(fuente)
+                #self.correo_cliente.setFont(fuente)
                 self.celular_cliente.setPlaceholderText('Celular')
-                self.celular_cliente.setFont(fuente)
+                #self.celular_cliente.setFont(fuente)
                 vertica_layout.addWidget(self.nombre_cliente)
                 vertica_layout.addWidget(self.correo_cliente)
                 vertica_layout.addWidget(self.celular_cliente)
@@ -81,8 +85,8 @@ class Inicio(QMainWindow):
             boton_aceptar.setText('Aceptar')
             boton_aceptar.clicked.connect(self.cargar_venta)
 
-            boton_aceptar.setFont(fuente)
-            boton_cancelar.setFont(fuente)
+            #boton_aceptar.setFont(fuente)
+            #boton_cancelar.setFont(fuente)
 
             vertica_layout.addWidget(boton_cancelar)
             vertica_layout.addWidget(boton_aceptar)
@@ -185,7 +189,7 @@ class Inicio(QMainWindow):
     def mostrar_detalle(self, id):
         self.ventana_detalle = NuevaVentana(f'Detalle Venta {id}')
         self.lista_detalle = QListWidget()
-        for widget in crear_items_detalle(id):
+        for widget in crear_items_detalle(id, self.cambio_talle):
             item = QListWidgetItem()
             item.setSizeHint(QSize(600,80))
             self.lista_detalle.addItem(item)
@@ -194,6 +198,22 @@ class Inicio(QMainWindow):
 
         self.ventana_detalle.show()
 
+
+    def cambio_talle(self, id_prod, id_talle, detalle):
+        #buscar los prod que tienen ese talle
+        talles = VentasDAO.seleccionar_talles_cambio(id_prod)
+        self.ventana_cambio_talle = NuevaVentana('Cambio de Talle')
+        componente = QWidget()
+        layout = QVBoxLayout(componente)
+        layout.setAlignment(Qt.AlignCenter)
+
+        lbl_talle_actual = QLabel(f'Talle Actual: {detalle.talle}')
+
+
+        layout.addWidget(lbl_talle_actual)
+
+        self.ventana_cambio_talle.layout.addWidget(componente)
+        self.ventana_cambio_talle.show()
 
     def load_products(self):
         self.ui.lista_productos.clear()

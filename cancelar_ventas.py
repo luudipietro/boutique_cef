@@ -1,30 +1,28 @@
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
 
+from clases.ventas_dao import VentasDAO
+
 
 def load_ventas_cancelar():
-    return [(1, 150250, '17:20','10/12/2025'),
-            (2, 150250, '17:20','10/12/2025'),
-            (3, 150250, '17:20','10/12/2025'),
-            (4, 150250, '17:20','10/12/2025'),
-            (5, 150250, '17:20','10/12/2025'),
-            (6, 150250, '17:20','10/12/2025'),
-            (7, 150250, '17:20','10/12/2025')]
+    return VentasDAO.seleccionar_ventas()
 
 def widgets_ventas_cancelar(callback):
     widgets = []
-    for id, precio, hora, fecha in load_ventas_cancelar():
-        widgets.append(crear_widget(id,precio, hora, fecha, callback))
+    for venta in load_ventas_cancelar():
+        widgets.append(crear_widget(venta.id_venta, venta.total, venta.fecha, venta.nro_recibo ,callback))
     return widgets
 
-def crear_widget(id, precio, hora, fecha, callback):
+def crear_widget(id, precio, fecha, recibo, callback):
     widget = QWidget()
     boton_detalle = QPushButton()
     boton_detalle.setText('Detalle')
     boton_detalle.clicked.connect(lambda: callback(id))
     layout = QHBoxLayout(widget)
-    layout.addWidget(QLabel(str(id)))
-    layout.addWidget(QLabel(str(precio)))
-    layout.addWidget(QLabel(hora))
-    layout.addWidget(QLabel(fecha))
+    layout.addWidget(QLabel(str(recibo)))
+    layout.addWidget(QLabel(f'${precio:,.2f}'))
+    layout.addWidget(QLabel(str(fecha)))
     layout.addWidget(boton_detalle)
     return widget
+
+if __name__ == '__main__':
+    widgets_ventas_cancelar(1)
