@@ -62,6 +62,9 @@ class Inicio(QMainWindow):
             horizontal_layout.addWidget(total)
             horizontal_layout.addWidget(medio_pago)
             vertica_layout.addLayout(horizontal_layout)
+            self.nro_recibo = QLineEdit()
+            self.nro_recibo.setPlaceholderText('Numero de Recibo')
+            vertica_layout.addWidget(self.nro_recibo)
 
             if self.ui.combo_medio_pago.currentText() == 'Transferencia' or self.ui.combo_medio_pago.currentText() == 'Tarjeta':
                 self.nombre_cliente = QLineEdit()
@@ -103,35 +106,44 @@ class Inicio(QMainWindow):
             if item:
                 label_precio, precio_efec, precio_tarj, cantidad, id_talle, id_prod, item = item.data(Qt.UserRole)
                 if metodo_pago == 1 or metodo_pago == 2:
-                    productos.append((id_prod, id_talle,cantidad, precio_efec, cantidad * precio_efec))
+                    productos.append((id_prod, id_talle, precio_efec))
                 else:
-                    productos.append((id_prod, id_talle,cantidad, precio_tarj, cantidad * precio_tarj))
+                    productos.append((id_prod, id_talle, precio_tarj))
         return productos
 
 
     def cargar_venta(self):
         id_cliente = 1
-        if hasattr(self, 'nombre_cliente'):
-            id_cliente=2
-            if self.nombre_cliente.text() == '' or self.celular_cliente.text() == '' or self.correo_cliente.text() == '':
-                mensaje = QMessageBox()
-                mensaje.setIcon(QMessageBox.Warning)
-                mensaje.setWindowTitle('Advertencia')
-                mensaje.setText('Completar los datos de la factura')
-                mensaje.setStandardButtons(QMessageBox.Ok)
-                mensaje.exec()
-                return
+        if self.nro_recibo.text() != '':
+            if hasattr(self, 'nombre_cliente'):
+                id_cliente=2
+                if self.nombre_cliente.text() == '' or self.celular_cliente.text() == '' or self.correo_cliente.text() == '':
+                    mensaje = QMessageBox()
+                    mensaje.setIcon(QMessageBox.Warning)
+                    mensaje.setWindowTitle('Advertencia')
+                    mensaje.setText('Completar los datos de la factura')
+                    mensaje.setStandardButtons(QMessageBox.Ok)
+                    mensaje.exec()
+                    return
 
-        print(f'Total Venta {float(self.ui.label_monto_total.text())}  '
-              f'Id Metodo de Pago: {self.ui.combo_medio_pago.currentIndex()+1}  '
-              f'Id Cliente {id_cliente}  '
-              f'Detalle Venta Producto  '
-              f'Productos{self.listar_productos_carrito(self.ui.combo_medio_pago.currentIndex()+1)}' #paso el id del metodo de pago
-              )
-        self.ui.lista_detalle_venta.clear()
-        self.actualizar_total_venta()
-        self.ventana_factura.close()
-        #return float(self.ui.label_monto_total.text()),self.ui.combo_medio_pago.currentIndex()+1,self.listar_productos_carrito()
+            print(f'Total Venta {float(self.ui.label_monto_total.text())}  '
+                  f'Id Metodo de Pago: {self.ui.combo_medio_pago.currentIndex()+1}  '
+                  f'Id Cliente {id_cliente}  '
+                  f'Detalle Venta Producto  '
+                  f'Productos{self.listar_productos_carrito(self.ui.combo_medio_pago.currentIndex()+1)}' #paso el id del metodo de pago
+                  )
+            self.ui.lista_detalle_venta.clear()
+            self.actualizar_total_venta()
+            self.ventana_factura.close()
+            #return float(self.ui.label_monto_total.text()),self.ui.combo_medio_pago.currentIndex()+1,self.listar_productos_carrito()
+        else:
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Warning)
+            mensaje.setWindowTitle('Advertencia')
+            mensaje.setText('Completar los datos de la factura')
+            mensaje.setStandardButtons(QMessageBox.Ok)
+            mensaje.exec()
+            return
 
     def cambio_menu_principal(self, indice):
         match indice:

@@ -231,12 +231,14 @@ class Ui_VentanaPrincipal(object):
         self.layout_fecha_desde_hasta = QHBoxLayout()
 
         self.dateEdit_desde = QDateEdit()
+        self.dateEdit_desde.setCalendarPopup(True)
         self.dateEdit_desde.setObjectName(u"dateEdit_desde")
 
         self.label_y = QLabel()
         self.label_y.setObjectName(u"label_y")
 
         self.dateEdit_hasta = QDateEdit()
+        self.dateEdit_hasta.setCalendarPopup(True)
         self.dateEdit_hasta.setObjectName(u"dateEdit_hasta")
 
         self.layout_fecha_desde_hasta.addWidget(self.dateEdit_desde)
