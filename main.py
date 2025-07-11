@@ -8,7 +8,9 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QWidge
 from cambiar_producto import crear_items_detalle
 from cancelar_ventas import widgets_ventas_cancelar
 from clases.produto_dao import ProductoDAO
+from clases.realizar_venta_dao import RealizarVentaDAO
 from clases.ventas_dao import VentasDAO
+from modificar_cantidades import crear_items_modificar_cantidades
 from nueva_ventana import NuevaVentana
 from ventanaPrincipal3 import Ui_VentanaPrincipal
 from ventas_del_dia import widgets_ventas_del_dia
@@ -19,7 +21,6 @@ class Inicio(QMainWindow):
         super().__init__()
         self.ui = Ui_VentanaPrincipal()
         self.ui.setupUi(self)
-
         self.definir_metodos_pago()
         self.ui.btn_limpiar.clicked.connect(self.limpiar_carrito)
         self.ui.pila_menu.currentChanged.connect(self.cambio_menu_principal)
@@ -28,6 +29,7 @@ class Inicio(QMainWindow):
         self.ui.dateEdit_desde.setDate(QDate.currentDate().addDays(-30))
         self.ui.dateEdit_hasta.setDate(QDate.currentDate())
         self.ui.fecha_ventas_dia.dateChanged.connect(self.caja_diaria)
+        self.ui.btn_modificar_cantidades.clicked.connect(self.crear_ventana_modificar_cantidades)
         self.setStyleSheet('QLabel, QPushButton, QComboBox, QWidget, QLineEdit {font-size: 18px; font-family: Arial; }')
         self.load_products()
 
@@ -35,12 +37,12 @@ class Inicio(QMainWindow):
     def crear_ventana_modificar_cantidades(self):
         self.ventana_modificar_cantidades = NuevaVentana('Modificar cantidades')
         self.lista_modificar_cantidades = QListWidget()
-        for widget in crear_items_modificar_cantidades(id):
+        for widget in crear_items_modificar_cantidades():
             item = QListWidgetItem()
             item.setSizeHint(QSize(600, 80))
             self.lista_modificar_cantidades.addItem(item)
             self.lista_modificar_cantidades.setItemWidget(item, widget)
-        self.ventana_modificar_cantidades.layout.addWidget(self.lista_detalle)
+        self.ventana_modificar_cantidades.layout.addWidget(self.lista_modificar_cantidades)
 
         self.ventana_modificar_cantidades.show()
 
@@ -66,23 +68,23 @@ class Inicio(QMainWindow):
             self.nro_recibo.setPlaceholderText('Numero de Recibo')
             vertica_layout.addWidget(self.nro_recibo)
 
-            if self.ui.combo_medio_pago.currentText() == 'Transferencia' or self.ui.combo_medio_pago.currentText() == 'Tarjeta':
-                self.nombre_cliente = QLineEdit()
-                self.correo_cliente = QLineEdit()
-                self.celular_cliente = QLineEdit()
-                self.nombre_cliente.setPlaceholderText('Nombre y Apellido')
-                #self.nombre_cliente.setFont(fuente)
-                self.correo_cliente.setPlaceholderText('Correo ')
-                #self.correo_cliente.setFont(fuente)
-                self.celular_cliente.setPlaceholderText('Celular')
-                #self.celular_cliente.setFont(fuente)
-                vertica_layout.addWidget(self.nombre_cliente)
-                vertica_layout.addWidget(self.correo_cliente)
-                vertica_layout.addWidget(self.celular_cliente)
+
+            self.nombre_cliente = QLineEdit()
+            self.correo_cliente = QLineEdit()
+            self.celular_cliente = QLineEdit()
+            self.nombre_cliente.setPlaceholderText('Nombre y Apellido')
+            #self.nombre_cliente.setFont(fuente)
+            self.correo_cliente.setPlaceholderText('Correo ')
+            #self.correo_cliente.setFont(fuente)
+            self.celular_cliente.setPlaceholderText('Celular')
+            #self.celular_cliente.setFont(fuente)
+            vertica_layout.addWidget(self.nombre_cliente)
+            vertica_layout.addWidget(self.correo_cliente)
+            vertica_layout.addWidget(self.celular_cliente)
 
             boton_cancelar = QPushButton()
             boton_cancelar.setText('Cancelar')
-            boton_cancelar.clicked.connect(self.ventana_factura.close)
+            boton_cancelar.clicked.connect(self.ventana_factura.destroy)
 
             boton_aceptar = QPushButton()
             boton_aceptar.setText('Aceptar')
@@ -96,7 +98,12 @@ class Inicio(QMainWindow):
             self.ventana_factura.layout.addWidget(componente)
             self.ventana_factura.show()
         else:
-            print('El carrito esta vacio')
+            mensaje = QMessageBox()
+            mensaje.setIcon(QMessageBox.Warning)
+            mensaje.setWindowTitle('Advertencia')
+            mensaje.setText('El carrito esta vacio')
+            mensaje.setStandardButtons(QMessageBox.Ok)
+            mensaje.exec()
 
     def listar_productos_carrito(self, metodo_pago):
         productos = []
@@ -115,17 +122,17 @@ class Inicio(QMainWindow):
     def cargar_venta(self):
         id_cliente = 1
         if self.nro_recibo.text() != '':
-            if hasattr(self, 'nombre_cliente'):
-                id_cliente=2
-                if self.nombre_cliente.text() == '' or self.celular_cliente.text() == '' or self.correo_cliente.text() == '':
-                    mensaje = QMessageBox()
-                    mensaje.setIcon(QMessageBox.Warning)
-                    mensaje.setWindowTitle('Advertencia')
-                    mensaje.setText('Completar los datos de la factura')
-                    mensaje.setStandardButtons(QMessageBox.Ok)
-                    mensaje.exec()
-                    return
-
+            # if hasattr(self, 'nombre_cliente'):
+            #     id_cliente=2
+            #     if self.nombre_cliente.text() == '' or self.celular_cliente.text() == '' or self.correo_cliente.text() == '':
+            #         mensaje = QMessageBox()
+            #         mensaje.setIcon(QMessageBox.Warning)
+            #         mensaje.setWindowTitle('Advertencia')
+            #         mensaje.setText('Completar los datos de la factura')
+            #         mensaje.setStandardButtons(QMessageBox.Ok)
+            #         mensaje.exec()
+            #         return
+            RealizarVentaDAO.realizar_venta(float(self.ui.label_monto_total.text()), self.ui.combo_medio_pago.currentIndex()+1, id_cliente, self.nro_recibo.text(), self.listar_productos_carrito(self.ui.combo_medio_pago.currentIndex()+1))
             print(f'Total Venta {float(self.ui.label_monto_total.text())}  '
                   f'Id Metodo de Pago: {self.ui.combo_medio_pago.currentIndex()+1}  '
                   f'Id Cliente {id_cliente}  '
@@ -140,7 +147,7 @@ class Inicio(QMainWindow):
             mensaje = QMessageBox()
             mensaje.setIcon(QMessageBox.Warning)
             mensaje.setWindowTitle('Advertencia')
-            mensaje.setText('Completar los datos de la factura')
+            mensaje.setText('Completar Numero de recibo')
             mensaje.setStandardButtons(QMessageBox.Ok)
             mensaje.exec()
             return

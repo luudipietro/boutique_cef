@@ -75,7 +75,7 @@ class RealizarVentaDAO:
                 Conexion.liberar_conexion(conexion)
 
 if __name__ == '__main__':
-    ventas = RealizarVentaDAO.realizar_venta(10,1,0,147, [(1,2,22500),(2,1,21500)],[(1,50000,[(1,1),(2,1),(3,11)]), (1,50000,[(1,3),(2,4),(3,13)])])
+    ventas = RealizarVentaDAO.realizar_venta(132,1,0,137, [(1,2,22500),(2,1,21500)],[(1,50000,[(1,1),(2,1),(3,11)]), (1,50000,[(1,3),(2,4),(3,13)])])
 
 
 

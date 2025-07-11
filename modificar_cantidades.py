@@ -1,38 +1,41 @@
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QComboBox
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QComboBox, QSpinBox
+
+from clases.produto_dao import ProductoDAO
 
 
-def productos_modificar_cantidades(id):
+def productos_modificar_cantidades():
 
-    detalle = [(1, 'Camiseta de Juego', 'camiseta_cef.jpg', 'S', 1),
-               (1, 'Camiseta de Juego', 'camiseta_cef.jpg', 'L', 1),
-               (1, 'Camiseta de Juego', 'camiseta_cef.jpg', 'M', 1)]
+    detalle = ProductoDAO.seleccionar_productos_venta()
+
     return detalle
 
-def crear_items_modificar_cantidades(id):
+def crear_items_modificar_cantidades():
     widgets = []
-    for id, nombre, imagen, talle, cantidad in productos_modificar_cantidades(id):
-        widgets.append(crear_widget_modificar_cantidades(id, nombre, imagen, talle, cantidad))
+    for p in productos_modificar_cantidades():
+        for t in p.talles:
+            widgets.append(crear_widget_modificar_cantidades(p.id, p.nombre, t))
     return widgets
 
-def crear_widget_modificar_cantidades(id, nombre, imagen, talle, cantidad):
+def crear_widget_modificar_cantidades(id, nombre, talle):
     widget = QWidget()
     layout = QHBoxLayout(widget)
     img_label = QLabel()
-    pixmap = QPixmap(f'../img/{imagen}').scaled(75, 75)
+    pixmap = QPixmap(f'img/{nombre}.png').scaled(75, 75)
     img_label.setPixmap(pixmap)
-    combo_talle = QComboBox()
-    combo_talle.addItems(['S','M','L'])
-    combo_talle.setCurrentText(talle)
-
+    label_talle = QLabel(str(talle.talle))
+    spn_cantidad_agregar = QSpinBox()
+    spn_cantidad_agregar.setMinimum(1)
     boton_cambiar = QPushButton()
-    boton_cambiar.setText('Cambiar')
+    boton_cambiar.setText('Agregar')
     #boton_cambiar.clicked.connect(pass)
     layout.addWidget(QLabel(str(id)))
-    layout.addWidget(QLabel(str(nombre)))
+
     layout.addWidget(img_label)
-    layout.addWidget(combo_talle)
-    layout.addWidget(QLabel(str(cantidad)))
+    layout.addWidget(QLabel(str(nombre)))
+    layout.addWidget(label_talle)
+    layout.addWidget(QLabel(str(talle.stock)))
+    layout.addWidget(spn_cantidad_agregar)
     layout.addWidget(boton_cambiar)
     return widget
 

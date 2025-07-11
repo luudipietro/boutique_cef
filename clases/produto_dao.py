@@ -100,10 +100,12 @@ class ProductoDAO:
                 Conexion.liberar_conexion(conexion)
 
 if __name__ == '__main__':
-    for p in ProductoDAO.seleccionar_combos():
-        print(p.nombre, p.precio)
-        for producto in p.productos:
-            print(producto.nombre)
-            for talle in producto.talles:
-                print(talle.talle)
+    for p in ProductoDAO.seleccionar_productos_venta():
+        print(p.nombre, p.id)
+        for t in p.talles:
+            print(t.talle, t.stock, t.precio_efectivo, t.precio_tarjeta)
+        # for producto in p.productos:
+        #     print(producto.nombre)
+        #     for talle in producto.talles:
+        #         print(talle.talle)
 
