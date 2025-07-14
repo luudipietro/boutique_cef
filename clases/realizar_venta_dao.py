@@ -44,9 +44,10 @@ class RealizarVentaDAO:
             id_venta = cursor.fetchall()[0][0]
             if productos is not None:
                 for producto in productos:
-                    valores_producto = (id_venta, producto[0], producto[1], producto[2])
-                    cursor.execute(cls.INSERTAR_DETALLE_PRODUCTO, valores_producto)
-                    cursor.execute(cls.DESCONTAR_STOCK, (producto[0], producto[1]))
+                    for i in range(producto[3]):
+                        valores_producto = (id_venta, producto[0], producto[1], producto[2])
+                        cursor.execute(cls.INSERTAR_DETALLE_PRODUCTO, valores_producto)
+                        cursor.execute(cls.DESCONTAR_STOCK, (producto[0], producto[1]))
 
             if combos is not None:
                 for combo in combos:

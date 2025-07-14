@@ -1,3 +1,5 @@
+from multiprocessing.resource_tracker import register
+
 from clases.combo import Combo
 from clases.producto import Producto, TalleProducto
 from clases.ventas import Talle
@@ -5,6 +7,29 @@ from conexion import Conexion
 
 
 class ProductoDAO:
+    SELECCIONAR_PRODUCTOS = """
+    SELECT
+        p.idProducto,
+        p.nombreProducto,
+        p.precio
+    FROM Producto p
+    ORDER BY p.idProducto;
+    """
+
+    SELECCIONAR_TALLES = """
+    SELECT 
+        p.idProducto,
+        t.idTalle,
+        t.talle,
+        tp.stock
+    FROM Producto p
+    JOIN Talle_Producto tp ON p.idProducto = tp.idProducto
+    JOIN Talle t ON tp.idTalle = t.idTalle
+    WHERE p.idProducto = %s 
+    AND tp.stock > 0 
+    ORDER BY p.idProducto, t.idTalle
+    """
+
     SELECCIONAR = """
     SELECT 
         p.idProducto,
@@ -40,6 +65,47 @@ class ProductoDAO:
         
         """
         
+
+    @classmethod
+    def seleccionar_productos(cls):
+        conexion = None
+        try:
+            conexion = Conexion.obtener_conexion()
+            cursor = conexion.cursor()
+            cursor.execute(cls.SELECCIONAR_PRODUCTOS)
+            registros = cursor.fetchall()
+            productos = []
+            for id_producto, nombre, precio in registros:
+                producto = Producto(id_producto, nombre, precio)
+                productos.append(producto)
+            return productos
+        except Exception as e:
+            return f'Ocurrio un error al seleccionar Productos {e}'
+        finally:
+            if conexion is not None:
+                cursor.close()
+                Conexion.liberar_conexion(conexion)
+
+    @classmethod
+    def seleccionar_talles(cls, id_producto):
+        conexion = None
+        try:
+            conexion = Conexion.obtener_conexion()
+            cursor = conexion.cursor()
+            valores = (id_producto, )
+            cursor.execute(cls.SELECCIONAR_TALLES, valores)
+            registros = cursor.fetchall()
+            talles = []
+            for idProducto, idTalle, talle, stock in registros:
+                talle = TalleProducto(idTalle, talle, stock)
+                talles.append(talle)
+            return talles
+        except Exception as e:
+            return f'Ocurrio un error al seleccionar Talles {e}'
+        finally:
+            if conexion is not None:
+                cursor.close()
+                Conexion.liberar_conexion(conexion)
 
     @classmethod
     def seleccionar_productos_venta(cls):
