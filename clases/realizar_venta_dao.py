@@ -24,9 +24,14 @@ class RealizarVentaDAO:
 
     DESCONTAR_STOCK = """
     UPDATE talle_producto 
-    SET stock = stock - 1 
+    SET stock = stock - %s
     WHERE idProducto = %s AND idTalle = %s;
     """
+    REGRESAR_STOCK = """
+        UPDATE talle_producto 
+        SET stock = stock + %s 
+        WHERE idProducto = %s AND idTalle = %s;
+        """
 
     ULTIMO_ID = 'SELECT LAST_INSERT_ID();'
 
@@ -47,7 +52,7 @@ class RealizarVentaDAO:
                     for i in range(producto[3]):
                         valores_producto = (id_venta, producto[0], producto[1], producto[2])
                         cursor.execute(cls.INSERTAR_DETALLE_PRODUCTO, valores_producto)
-                        cursor.execute(cls.DESCONTAR_STOCK, (producto[0], producto[1]))
+
 
             if combos is not None:
                 for combo in combos:
@@ -69,6 +74,39 @@ class RealizarVentaDAO:
             conexion.commit()
         except Exception as e:
             return f'Ocurrio un error al insertar Venta {e}'
+
+        finally:
+            if conexion is not None:
+                cursor.close()
+                Conexion.liberar_conexion(conexion)
+    @classmethod
+    def descontar_stock(cls, id_producto, id_talle, cantidad):
+        conexion = None
+        try:
+            conexion = Conexion.obtener_conexion()
+            cursor = conexion.cursor()
+            valores = (cantidad, id_producto, id_talle)
+            cursor.execute(cls.DESCONTAR_STOCK, valores)
+            conexion.commit()
+        except Exception as e:
+            return f'Ocurrio un error al descontar Stock {e}'
+
+        finally:
+            if conexion is not None:
+                cursor.close()
+                Conexion.liberar_conexion(conexion)
+
+    @classmethod
+    def regresar_stock(cls, id_producto, id_talle, cantidad):
+        conexion = None
+        try:
+            conexion = Conexion.obtener_conexion()
+            cursor = conexion.cursor()
+            valores = (cantidad, id_producto, id_talle)
+            cursor.execute(cls.REGRESAR_STOCK, valores)
+            conexion.commit()
+        except Exception as e:
+            return f'Ocurrio un error al descontar Stock {e}'
 
         finally:
             if conexion is not None:

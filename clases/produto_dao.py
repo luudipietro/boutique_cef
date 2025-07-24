@@ -36,13 +36,11 @@ class ProductoDAO:
         p.nombreProducto,
         t.idTalle,
         t.talle,
-        tp.stock,
-        tp.precio_efectivo,
-        tp.precio_tarjeta 
+        tp.stock
     FROM Producto p
     JOIN Talle_Producto tp ON p.idProducto = tp.idProducto
     JOIN Talle t ON tp.idTalle = t.idTalle
-    WHERE tp.stock > 0 
+
     ORDER BY p.idProducto, t.idTalle
     """
 
@@ -50,17 +48,8 @@ class ProductoDAO:
     SELECT
         c.idCombo, 
         c.nombre, 
-        c.precio, 
-        p.idProducto,
-        p.nombreProducto,
-        t.idTalle,
-        t.Talle  
+        c.precio 
         FROM combo c 
-        JOIN producto_combo pc ON c.idCombo = pc.idCombo 
-        JOIN producto p ON pc.idProducto = p.idProducto 
-        JOIN talle_producto tp ON p.idProducto = tp.idProducto 
-        JOIN talle t ON tp.idTalle = t.idTalle 
-        WHERE tp.stock >0
         ORDER BY c.idCombo;
         
         """
@@ -96,8 +85,8 @@ class ProductoDAO:
             cursor.execute(cls.SELECCIONAR_TALLES, valores)
             registros = cursor.fetchall()
             talles = []
-            for idProducto, idTalle, talle, stock in registros:
-                talle = TalleProducto(idTalle, talle, stock)
+            for idProducto, id_talle, talle, stock in registros:
+                talle = TalleProducto(id_talle, talle, stock)
                 talles.append(talle)
             return talles
         except Exception as e:
@@ -116,10 +105,10 @@ class ProductoDAO:
             cursor.execute(cls.SELECCIONAR)
             registros= cursor.fetchall()
             productos_dict = {}
-            for idProducto, nombre, idTalle, talle, stock, precio_efectivo, precio_tarjeta in registros:
+            for idProducto, nombre, id_talle, talle, stock in registros:
                 if idProducto not in productos_dict:
                     productos_dict[idProducto] = Producto(idProducto, nombre)
-                productos_dict[idProducto].talles.append(TalleProducto(idTalle, talle, stock, precio_efectivo, precio_tarjeta))
+                productos_dict[idProducto].talles.append(TalleProducto(id_talle, talle, stock))
             return list(productos_dict.values())
         except Exception as e:
             return f'Ocurrio un error al seleccionar Clientes {e}'
@@ -136,26 +125,15 @@ class ProductoDAO:
             cursor = conexion.cursor()
             cursor.execute(cls.SELECCIONAR_COMBOS)
             registros = cursor.fetchall()
-            combos_dict = {}
+            combos = []
 
-            for idCombo, nombreCombo, precioCombo, idProducto, nombreProducto, idTalle, talle in registros:
+            for idCombo, nombreCombo, precioCombo in registros:
                 # Si el combo no existe, lo creamos
-                if idCombo not in combos_dict:
-                    combos_dict[idCombo] = Combo(idCombo, nombreCombo, precioCombo)
 
-                # Buscamos el producto en los productos del combo
-                combo = combos_dict[idCombo]
-                producto_existente = next((p for p in combo.productos if p.id == idProducto), None)
+                combo = Combo(idCombo, nombreCombo, precioCombo)
 
-                if not producto_existente:
-                    # Si no existe, lo creamos y lo agregamos al combo
-                    producto_existente = Producto(idProducto, nombreProducto)
-                    combo.productos.append(producto_existente)
-
-                # Agregamos el talle al producto
-                producto_existente.talles.append(Talle(idTalle, talle))
-
-            return list(combos_dict.values())
+                combos.append(combo)
+            return combos
 
         except Exception as e:
             return f'Ocurrió un error al seleccionar Combos: {e}'

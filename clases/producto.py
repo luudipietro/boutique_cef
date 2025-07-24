@@ -10,8 +10,8 @@ class Producto:
         return self.__id, self.__nombre, self.__descripcion
 
 class TalleProducto:
-    def __init__(self, idTalle, talle, stock=None):
-        self.idTalle= idTalle
+    def __init__(self, id_talle, talle, stock=None):
+        self.id_talle= id_talle
         self.talle = talle
         self.stock = stock
 

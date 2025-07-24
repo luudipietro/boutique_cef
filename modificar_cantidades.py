@@ -1,5 +1,6 @@
-from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QComboBox, QSpinBox
+from PySide6.QtCore import QSize
+from PySide6.QtGui import QPixmap, Qt
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QComboBox, QSpinBox,QListWidgetItem
 
 from clases.produto_dao import ProductoDAO
 
@@ -18,6 +19,9 @@ def crear_items_modificar_cantidades():
     return widgets
 
 def crear_widget_modificar_cantidades(id, nombre, talle):
+    item = QListWidgetItem()
+    item.setSizeHint(QSize(600, 80))
+    item.setData(Qt.UserRole, (id, talle.id_talle))
     widget = QWidget()
     layout = QHBoxLayout(widget)
     img_label = QLabel()
@@ -26,10 +30,12 @@ def crear_widget_modificar_cantidades(id, nombre, talle):
     label_talle = QLabel(str(talle.talle))
     spn_cantidad_agregar = QSpinBox()
     spn_cantidad_agregar.setMinimum(1)
+
     boton_cambiar = QPushButton()
     boton_cambiar.setText('Agregar')
+    #boton_cambiar.clicked.connect(lambda: )
     #boton_cambiar.clicked.connect(pass)
-    layout.addWidget(QLabel(str(id)))
+    #layout.addWidget(QLabel(str(id)))
 
     layout.addWidget(img_label)
     layout.addWidget(QLabel(str(nombre)))
@@ -37,5 +43,4 @@ def crear_widget_modificar_cantidades(id, nombre, talle):
     layout.addWidget(QLabel(str(talle.stock)))
     layout.addWidget(spn_cantidad_agregar)
     layout.addWidget(boton_cambiar)
-    return widget
-
+    return item, widget

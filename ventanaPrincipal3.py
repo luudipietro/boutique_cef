@@ -26,6 +26,8 @@ class Ui_VentanaPrincipal(object):
             VentanaPrincipal.setObjectName(u"VentanaPrincipal")
         VentanaPrincipal.setEnabled(True)
         VentanaPrincipal.resize(1000, 700)
+
+
         VentanaPrincipal.setStyleSheet("font-size: 16px;")
         VentanaPrincipal.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         self.centralwidget = QWidget(VentanaPrincipal)
